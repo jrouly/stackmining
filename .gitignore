@@ -1,3 +1,4 @@
 *.pyc
-/cs484
+/venv
 *.swp
+/data
