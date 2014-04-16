@@ -1,0 +1,146 @@
+\documentclass[letterpaper,10pt]{article}
+
+%\usepackage[top=1.5in,bottom=1.5in,left=1in,right=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{amstext}
+\usepackage{dcolumn}
+\usepackage{courier}
+\usepackage{listings}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{array}
+\usepackage{tikz-qtree}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage[T1]{fontenc}
+\usepackage{enumitem}
+
+% Syntax highliting
+\lstset{
+    language=C++,
+    basicstyle=\ttfamily\small,
+    breaklines=true,
+    prebreak=\raisebox{0ex}[0ex][0ex]{\ensuremath{\hookleftarrow}},
+    frame=lines,
+    showtabs=false,
+    showspaces=false,
+    showstringspaces=false,
+    keywordstyle=\color{Dandelion}\textbf,
+    stringstyle=\color{BrickRed},
+    commentstyle=\color{gray}\itshape,
+    numbers=left,
+    captionpos=t,
+    escapeinside={\%*}{*)},
+    belowskip=1em,
+}
+
+\newcolumntype{d}[1]{D{.}{.}{#1} }
+
+\newcommand{\fref}[1]{Figure~\ref{#1}}
+
+\title{
+  \LARGE CS 484: Application Research Project Proposal \\
+  \Huge Language Accent Identification \\
+}
+\author{Jean Michel Rouly \& Joshua Wells }
+\date{\today}
+
+
+
+
+\begin{document}
+
+\maketitle
+
+\section{Problem Statement}
+
+There is a large volume of non-native English speech data available on the
+Internet in a variety of formats, lengths, and qualities. One such database
+is the George Mason Speech Accent Archive (\url{accent.gmu.edu}). An
+existing problem with these datasets is efficiently identifying and
+classifying accented speech with a high degree of correctness.
+
+Current techniques are generally highly labour intensive (\textit{i.e.}
+most accent classification is performed manually). There has been research
+in the area of automating this process through the use of Support Vector
+Machines and a limited variety of other Machine Learning techniques, but
+there is no industry standard in the area. We would like to survey a
+variety of different preprocessing and classification techniques to rapidly
+and effectively automate the accent identification and classification
+process.
+
+
+\section{Datasets}
+
+\begin{tabular}{lll}
+\textbf{URL} & \textbf{Name} & \textbf{Entries} \\
+\hline
+accent.gmu.edu  & Speech Accent Archive & 1890 \\
+www.cslu.ogi.edu/corpora/fae & Foreign Accented English & 4925 \\
+\end{tabular}
+
+\subsection{Speech Accent Archive}
+
+The George Mason Speech Accent Archive is by Dr. Steven Weinberger from the
+Linguistics department. It contains several thousand audio samples of
+accented speech collected from native and non-native speakers of English.
+Every sample is a high fidelity recording of speakers reciting the same
+pre-prepared paragraph. The dimensionality of each entry is unknown, but
+presumed to be high (dependent on preprocessing techniques). There are a
+large number of possible labels (accents) identified as well; it will
+likely be necessary to select a subset of labels to increase performance.
+
+\subsection{Foreign Accented English}
+
+The Foreign Accented English corpus is a corpus containing several thousand
+telephone recordings of accented, non-native English. Each entry is around
+twenty seconds in length, and does not necessarily contain the same spoken
+words. This dataset is proprietary, but licensed to academic institutions
+at no cost. The dimensionality of each entry is unknown, but presumed to be
+high (dependent on preprocessing techniques).
+
+\section{Procedure}
+
+\begin{itemize}
+  \item Research background information
+    \begin{itemize}
+    \item Procedures for interpreting raw speech data
+    \item Prosodic characteristics of accented speech (domain knowledge)
+    \item Software frameworks to perform vectorization \& analytics
+    \end{itemize}
+  \item Preprocess the data
+    \begin{itemize}
+    \item Extract attributes from underlying raw data representation
+    \item Feature selection, dimensionality reduction, as needed (PCA,
+    manual selection, etc.)
+    \end{itemize}
+  \item Perform analytics
+    \begin{itemize}
+    \item Cross-validated classifiers
+    \item Train and test classifiers over each dataset
+    \item Bayesian, Decision Trees, Nearest Neighbors, Neural Networks,
+    Support Vector Machines
+    \end{itemize}
+  \item Evaluate performance
+    \begin{itemize}
+    \item Perform recall, precision, and accuracy metrics
+    \item Evaluate performance, misclassification rate, etc.
+    \end{itemize}
+\end{itemize}
+
+\section{Evaluation Methodologies}
+
+Because this project describes an inherently predictive process, the
+evaluation of performance can be easily quantified through a variety of
+metrics addressing misclassification rate. Metrics applied to each
+technique used to classify over the data will be compared in order to
+determine the most appropriate classifier.
+
+\nocite{*}
+
+\bibliographystyle{plain}
+\bibliography{rouly_wells_proposal}
+
+\end{document}
