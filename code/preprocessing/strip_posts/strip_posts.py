@@ -16,7 +16,7 @@ logging.basicConfig(level=logging.DEBUG,
 args = sys.argv
 num_args = len( sys.argv )
 
-if( num_args != 3 ):
+if( num_args != 4 ):
     logging.error( "Usage: python strip_posts.py [s3|disk] input_file output_dest" )
     exit( 1 )
 
