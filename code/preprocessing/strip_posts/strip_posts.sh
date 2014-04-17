@@ -6,6 +6,7 @@ set -e
 if [ "$2" = "" ]
 then
   sourcedir="../../../data/data.toy/raw/"
+  echo "No source directory provided. Defaulting to toy dataset: $sourcedir"
 else
   sourcedir=$2
 fi
