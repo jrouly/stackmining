@@ -39,6 +39,6 @@ then
 
 else
 
-  echo "No protocol provided."
+  echo "No protocol provided. Use 'disk' or 's3'."
 
 fi
