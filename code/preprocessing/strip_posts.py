@@ -1,5 +1,9 @@
-from lxml import etree
+import time
+import os
 import sys
+
+import lxml.etree as xml
+import sklearn as sk
 
 
 if __name__ == "__main__":
@@ -7,20 +11,34 @@ if __name__ == "__main__":
     args = sys.argv
     num_args = len( sys.argv )
 
-    if( num_args <= 1 ):
-        print( "Usage: python strip_posts.py post_files" )
+    if( num_args != 3 ):
+        print( "Usage: python strip_posts.py input_file output_dir" )
         exit( 1 )
 
-    for arg in args[1:]:
+    in_file = sys.argv[1]
+    out_dir = sys.argv[2]
 
-        print( "Parsing %s" % arg )
+    print( "Reading from..  %s\nWriting to....  %s" % (in_file, out_dir) )
 
-        # construct tree over xml data
-        tree = etree.parse( arg )
-        rows = tree.iter("row")
+    # create output paths directory if it doesn't already exist
+    #if not os.path.exists( out_dir ):
+    #    time.sleep( 1 ) # naively avoid race conditions
+    #    os.makedirs( out_dir )
 
-        # for each row, split out its contents and output
-        for row in rows:
-            body = row.get("Body")
-            print( body )
+    # construct tree over xml data
+    tree = xml.parse( in_file )
+    rows = tree.iter("row")
 
+    # for each row, split out its contents and output
+    rownum = 0
+    for row in rows:
+
+        # generate new filename and contents
+        rownum = rownum + 1
+        filename = os.path.join( out_dir, "post" + str(rownum) )
+        body = row.get("Body")
+
+        # write body of post to file
+        #row_file = open( filename, 'w' )
+        #row_file.write( body )
+        #row_file.close()
