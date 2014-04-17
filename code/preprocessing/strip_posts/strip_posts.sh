@@ -14,7 +14,7 @@ then
   do
     outdir=$( echo $input | sed 's/^.*raw\//posts\//' | sed 's/Posts.xml//' )
     outurl="$s3url$outdir"
-    python strip_posts_to_s3.py $input $outurl
+    python strip_posts.py $1 $input $outurl
   done
 
 fi
@@ -28,7 +28,7 @@ then
   for input in ../../data/data/raw/*/Posts.xml
   do
     output=$( echo $input | sed 's/raw/posts/' | sed 's/Posts.xml//' )
-    python strip_posts_to_disk.py $input $output
+    python strip_posts.py $1 $input $output
   done
 
 fi
