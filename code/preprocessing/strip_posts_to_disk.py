@@ -40,7 +40,7 @@ for row in rows:
     # generate new filename and contents
     rownum = rownum + 1
     filename = os.path.join( out_dir, "post" + str(rownum) )
-    body = row.get("Body")
+    body = row.get("Body").encode("ascii", "ignore")
 
     # write body of post to file
     row_file = open( filename, 'w' )
