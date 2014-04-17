@@ -5,6 +5,11 @@ Data dump URL: https://archive.org/details/stackexchange
 
 ## Environment Setup
 
+Setup your Amazon AWS credentials for `boto` (see [https://code.google.com/p/boto/wiki/BotoConfig])
+
+    export AWS_ACCESS_KEY_ID=...
+    export AWS_SECRET_ACCESS_KEY=...
+
 Clone down this repository
 
     git clone git@git.gmu.edu:jrouly/cs484project
