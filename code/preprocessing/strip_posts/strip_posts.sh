@@ -38,6 +38,18 @@ then
   done
 
 
+# null output protocol
+elif [ "$1" = "null" ]
+then
+
+  for input in $sourcedir/*/Posts.xml
+  do
+    output=$( echo $input | sed 's/raw/posts/' | sed 's/Posts.xml//' )
+    python strip_posts.py null $input $output
+  done
+
+
+# no output protocol given
 else
 
   echo "No protocol provided. Use 'disk' or 's3'."
