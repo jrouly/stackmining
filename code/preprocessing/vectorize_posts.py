@@ -1,3 +1,9 @@
+"""
+Author: Michel Rouly
+Date:   2014-04-17
+"""
+
+
 import os
 import sys
 import time
@@ -14,6 +20,17 @@ from sklearn.pipeline import Pipeline
 
 
 def vectorize_posts(in_file, out_dest="null", protocol="null"):
+    """
+    Vectorize Posts: read in, clean, and represent post data as a numpy
+    sparse tf-idf array.
+
+        in_file: read in from a Posts.xml file
+        out_dest: directory or s3 bucket to output to
+        protocol: [null|s3|disk]
+
+    In order to clean posts, we remove html tags and perform stop-word
+    removal.
+    """
 
     # turn on logging
     logging.basicConfig(level=logging.DEBUG,
