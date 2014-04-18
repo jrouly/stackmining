@@ -23,7 +23,8 @@ then
   do
     outdir=$( echo $input | sed 's/^.*raw\//posts\//' | sed 's/Posts.xml//' )
     outurl="$s3url$outdir"
-    python strip_posts.py s3 $input $outurl
+    python -c "from vectorize_posts import vectorize_posts;
+vectorize_posts( \"$input\", out_dest=\"$outurl\", protocol=\"s3\" );"
   done
 
 
@@ -34,7 +35,8 @@ then
   for input in $sourcedir/*/Posts.xml
   do
     output=$( echo $input | sed 's/raw/posts/' | sed 's/Posts.xml//' )
-    python strip_posts.py disk $input $output
+    python -c "from vectorize_posts import vectorize_posts;
+vectorize_posts( \"$input\", out_dest=\"$output\", protocol=\"disk\" );"
   done
 
 
@@ -45,7 +47,8 @@ then
   for input in $sourcedir/*/Posts.xml
   do
     output=$( echo $input | sed 's/raw/posts/' | sed 's/Posts.xml//' )
-    python strip_posts.py null $input $output
+    python -c "from vectorize_posts import vectorize_posts;
+vectorize_posts( \"$input\" );"
   done
 
 
