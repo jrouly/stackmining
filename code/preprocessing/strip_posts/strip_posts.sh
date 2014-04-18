@@ -5,8 +5,8 @@ set -e
 
 if [ "$2" = "" ]
 then
-  sourcedir="../../../data/data.toy/raw/"
-  echo "No source directory provided. Defaulting to toy dataset: $sourcedir"
+  echo "No source directory provided."
+  exit 1
 else
   sourcedir=$2
 fi
@@ -41,5 +41,6 @@ then
 else
 
   echo "No protocol provided. Use 'disk' or 's3'."
+  exit 1
 
 fi
