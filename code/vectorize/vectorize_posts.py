@@ -9,8 +9,9 @@ import sys
 import time
 import logging
 
-import s3file
 import numpy
+
+from s3file import s3open
 
 from lxml.etree import parse
 from lxml.html import document_fromstring
@@ -19,40 +20,100 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.pipeline import Pipeline
 
 
-def vectorize_posts(in_file, out_dest="null", protocol="null"):
+def read_corpus(in_protocol="disk",
+                data_dir=".",
+                s3_url="http://cs484project.s3.amazonaws.com",
+                s3_index_file="index.txt",
+                post_file="Posts.xml" ):
     """
-    Vectorize Posts: read in, clean, and represent post data as a numpy
+    Read Posts: read in Posts.xml files from a directory of directories,
+    ie. the main data dump directory.
+
+        in_protocol: [s3|disk]
+        data_dir:    input directory, defaults to cwd
+        s3_url:      ignored if protocol is disk
+        s3_index_file: ignored if protocol is disk
+        post_file:   name of data files, defaults to Posts.xml
+
+    """
+
+    # Verify that we have a valid input protocol, default to disk.
+    if in_protocol not in ["s3", "disk"]:
+        logging.error("Invalid input protocol.")
+        sys.exit(1)
+
+    # Set up an empty corpus
+    corpus = {}
+
+    # Set up an s3 connection for reading the input over an s3 stream.
+    if in_protocol == "s3":
+        logging.info("Reading from s3 storage.")
+
+        # Read in the index file (since this is s3)
+        index_filename = s3_url + "/" + s3_index_file
+        index_file = s3open( index_filename )
+
+        for f in index_file.readlines():
+
+            f = f[:-1] # strip out newlines
+            fullpath = s3_url + "/" + data_dir + "/" + f + "/" + post_file
+
+            # Store the vectorized documents based on their category
+            category = f[ : f.index(".") ]
+            vectors = vectorize_file( fullpath, protocol=in_protocol )
+            corpus[category] = vectors
+
+    # Otherwise read from the local disk.
+    else:
+        logging.info("Reading from disk.")
+
+        # Loop over the contents of the data directory
+        for in_file in os.listdir( data_dir ):
+
+            # Regenerate a full reference to the file we're reading in
+            fullpath = os.path.join( data_dir, in_file, post_file )
+
+            # Store the vectorized documents based on their category
+            category = in_file[ : in_file.index(".") ]
+            vectors = vectorize_file( fullpath, protocol=in_protocol )
+            corpus[category] = vectors
+
+    return corpus
+
+
+
+def vectorize_file( in_file, protocol="disk" ):
+    """
+    Vectorize Category: read in, clean, and represent post data as a numpy
     sparse tf-idf array.
 
         in_file: read in from a Posts.xml file
-        out_dest: directory or s3 bucket to output to
-        protocol: [null|s3|disk]
+        protocol: [s3|disk]
 
     In order to clean posts, we remove html tags and perform stop-word
     removal.
     """
 
-    # turn on logging
-    logging.basicConfig(level=logging.DEBUG,
-                        format='%(levelname)s: %(message)s')
+    # Verify that we have a valid input protocol, default to disk.
+    if protocol not in ["s3", "disk"]:
+        logging.error("Invalid input protocol.")
+        sys.exit(1)
 
-    # catch edge case ouput protocols
-    if out_dest == "null" or protocol == "null" or protocol not in ["s3", "disk", "null"]:
+    f = None # empty file handle
 
-        protocol = "null"
-        out_dest = "null"
+    # Reading in from an s3 bucket
+    if protocol == "s3":
+        f = s3open( in_file )
 
-    logging.info( "Reading from..  %s" % in_file )
-    logging.info( "Writing to....  %s" % out_dest )
+    # Reading in from local disk storage
+    else:
+        f = open( in_file, 'r' )
 
-    if protocol == "disk":
-        # create output paths directory if it doesn't already exist
-        if not os.path.exists( out_dest ):
-            time.sleep( 1 ) # naively avoid race conditions
-            os.makedirs( out_dest )
+    logging.info("Vectorizing over input file.")
 
     # construct tree over xml data
-    tree = parse( in_file )
+    tree = parse( f )
+    f.close()
     rows = tree.iter("row")
 
     # create a tf_idf vectorizer machine
@@ -71,12 +132,8 @@ def vectorize_posts(in_file, out_dest="null", protocol="null"):
     posts = []
 
     # for each row, split out its contents and output
-    rownum = 0
     for row in rows:
 
-        # generate new filename and contents
-        rownum = rownum + 1
-        filename = os.path.join( out_dest, "post" + str(rownum) )
         body = row.get("Body")
 
         # skip empty documents
@@ -91,22 +148,26 @@ def vectorize_posts(in_file, out_dest="null", protocol="null"):
         # add to list in memory
         posts.append( body )
 
-        # write body of post to file
-        if protocol == "disk":
-            row_file = open( filename, 'w' )
-            row_file.write( body )
-            row_file.close()
-
-        # write body of post out to s3 bucket
-        elif protocol == "s3":
-            s3 = s3file.s3open( filename )
-            s3.write( body )
-            s3.close()
-
-        else:
-            pass
-
     # remove HTML entities and perform stop word removal
     vectorized_posts = tfidf_vectorizer.fit_transform( posts )
 
     return vectorized_posts
+
+
+if __name__ == "__main__":
+
+    # turn on logging
+    logging.basicConfig(level=logging.DEBUG,
+                        format='%(levelname)s: %(message)s')
+
+    if len( sys.argv ) != 3:
+        logging.error( "Usage: python read_corpus.py [s3|disk] data_dir" )
+        sys.exit( 1 )
+
+    in_protocol = sys.argv[1]
+    data_dir = sys.argv[2]
+
+    read_corpus( in_protocol=in_protocol, data_dir=data_dir )
+
+
+
