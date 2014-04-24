@@ -28,6 +28,92 @@ def do_kmeans( corpus ):
 
 
 
+# Perform Affinity Propagation {{{
+def do_affinity_propagation( corpus ):
+    """
+    Do Affinity Propagation: perform Affinity Propagation clustering on an
+    input corpus.  Input is expected to be a dictionary of categories to
+    tf-idf vectors.
+    """
+
+    logging.info("Beginning Affinity Propagation clustering.")
+
+    return
+# }}}
+
+
+
+# Perform Mean Shift {{{
+def do_mean_shift( corpus ):
+    """
+    Do Mean Shift: perform Mean Shift clustering on an input corpus.  Input
+    is expected to be a dictionary of categories to tf-idf vectors.
+    """
+
+    logging.info("Beginning Mean Shift clustering.")
+
+    return
+# }}}
+
+
+
+# Perform Spectral Clustering {{{
+def do_spectral( corpus ):
+    """
+    Do Spectral: perform Spectral clustering on an input corpus.  Input is
+    expected to be a dictionary of categories to tf-idf vectors.
+    """
+
+    logging.info("Beginning Spectral clustering.")
+
+    return
+# }}}
+
+
+
+# Perform Hierarchical {{{
+def do_hierarchical( corpus ):
+    """
+    Do Hierarchical: perform Hierarchical clustering on an input corpus.
+    Input is expected to be a dictionary of categories to tf-idf vectors.
+    """
+
+    logging.info("Beginning Hierarhical clustering.")
+
+    return
+# }}}
+
+
+
+# Perform DBSCAN {{{
+def do_dbscan( corpus ):
+    """
+    Do DBSCAN: perform DBSCAN clustering on an input corpus.
+    Input is expected to be a dictionary of categories to tf-idf vectors.
+    """
+
+    logging.info("Beginning DBSCAN clustering.")
+
+    return
+# }}}
+
+
+
+# Perform Gaussian {{{
+def do_gaussian( corpus ):
+    """
+    Do Gaussian: perform Gaussian Mixture Modeling clustering on an input
+    corpus.  Input is expected to be a dictionary of categories to tf-idf
+    vectors.
+    """
+
+    logging.info("Beginning Gaussian Mixture Modeling clustering.")
+
+    return
+# }}}
+
+
+
 # Executable (Main) {{{
 if __name__ == "__main__":
 
@@ -64,6 +150,18 @@ if __name__ == "__main__":
 
     if algorithm == "meanshift":
         do_meanshift( )
+
+    if algorithm == "spectral":
+        do_spectral( )
+
+    if algorithm == "hierarhical":
+        do_hierarchical( )
+
+    if algorithm == "dbscan":
+        do_dbscan( )
+
+    if algorithm == "gaussian":
+        do_gaussian( )
 # }}}
 
 
