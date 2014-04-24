@@ -20,6 +20,8 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.pipeline import Pipeline
 
 
+
+# Read Corpus {{{
 def read_corpus(in_protocol="disk",
                 data_dir=".",
                 s3_url="http://cs484project.s3.amazonaws.com",
@@ -76,6 +78,7 @@ def read_corpus(in_protocol="disk",
             # store the vectors in the corpus
             corpus = store_vectors( f, fullpath )
 
+
     # Otherwise read from the local disk.
     else:
         logging.info("Reading from disk.")
@@ -89,11 +92,14 @@ def read_corpus(in_protocol="disk",
             # store the vectors in the corpus
             corpus = store_vectors( in_file, fullpath )
 
+
     logging.info("Corpus vectorized.")
     return corpus
+# }}}
 
 
 
+# Vectorize File {{{
 def vectorize_file( in_file, protocol="disk" ):
     """
     Vectorize Category: read in, clean, and represent post data as a numpy
@@ -164,8 +170,11 @@ def vectorize_file( in_file, protocol="disk" ):
     vectorized_posts = tfidf_vectorizer.fit_transform( posts )
 
     return vectorized_posts
+# }}}
 
 
+
+# Executable (Main) {{{
 if __name__ == "__main__":
 
     # turn on logging
@@ -181,5 +190,7 @@ if __name__ == "__main__":
 
     corpus = read_corpus( in_protocol=in_protocol, data_dir=data_dir )
     print( corpus )
+# }}}
+
 
 
