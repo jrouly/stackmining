@@ -1,6 +1,6 @@
 """
 Author: Michel Rouly
-Date:   2014-04-17
+Date:   2014-04-24
 """
 
 
@@ -78,6 +78,7 @@ def read_corpus(in_protocol="disk",
             vectors = vectorize_file( fullpath, protocol=in_protocol )
             corpus[category] = vectors
 
+    logging.info("Corpus vectorized.")
     return corpus
 
 
@@ -167,7 +168,7 @@ if __name__ == "__main__":
     in_protocol = sys.argv[1]
     data_dir = sys.argv[2]
 
-    read_corpus( in_protocol=in_protocol, data_dir=data_dir )
-
+    corpus = read_corpus( in_protocol=in_protocol, data_dir=data_dir )
+    print( corpus )
 
 
