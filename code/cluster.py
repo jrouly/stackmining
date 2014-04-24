@@ -13,6 +13,8 @@ from sklearn.cluster import KMeans
 from read_corpus import read_corpus
 
 
+
+# Perform KMeans {{{
 def do_kmeans( corpus ):
     """
     Do KMeans: perform KMeans clustering on an input corpus. Input is
@@ -22,8 +24,11 @@ def do_kmeans( corpus ):
     logging.info("Beginning KMeans clustering.")
 
     return
+# }}}
 
 
+
+# Executable (Main) {{{
 if __name__ == "__main__":
 
     # turn on logging
@@ -59,4 +64,7 @@ if __name__ == "__main__":
 
     if algorithm == "meanshift":
         do_meanshift( )
+# }}}
+
+
 
