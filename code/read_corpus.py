@@ -55,6 +55,10 @@ def read_corpus(in_protocol="disk",
         Store the vectorized documents based on their category.
         """
 
+        # TODO: Grab the index of the rows which this category applies to
+        # so that we can stick them back in later, but stick all the
+        # elements in the same corpus data structure.
+
         category = in_file[ : in_file.index(".") ]
         vectors = vectorize_file( fullpath, protocol=in_protocol )
         corpus[category] = vectors
