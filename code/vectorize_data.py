@@ -108,15 +108,16 @@ def vectorize_data(in_protocol="disk",
 
     # create a tf_idf vectorizer machine
     tfidf_vectorizer = TfidfVectorizer(
-        input="content",
-        encoding="ascii",
-        decode_error="ignore",
-        strip_accents="ascii",
-        stop_words="english",
-        lowercase=True,
-        max_df=0.9,
-        use_idf=True,
-        smooth_idf=True,
+        input="content",        # will pass input directly
+        encoding="ascii",       # use basic ascii encoding
+        decode_error="ignore",  # ignore decoding errors
+        strip_accents="ascii",  # strip fancy characters
+        stop_words="english",   # remove english stopwords
+        lowercase=True,         # lowercase everything
+        max_df=0.95,            # terms must occur in under X documents
+        min_df=5,               # terms must occur in at least X documents
+        use_idf=True,           # inverse document frequency (weighting)
+        smooth_idf=True,        # smooth the data out
     )
 
 
