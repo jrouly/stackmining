@@ -21,15 +21,16 @@ from sklearn.pipeline import Pipeline
 
 
 
-# Read Corpus {{{
-def read_corpus(in_protocol="disk",
-                data_dir=".",
-                s3_url="http://cs484project.s3.amazonaws.com",
-                s3_index_file="index.txt",
-                post_file="Posts.xml" ):
+# Vectorize Data {{{
+def vectorize_data(in_protocol="disk",
+                   data_dir=".",
+                   s3_url="http://cs484project.s3.amazonaws.com",
+                   s3_index_file="index.txt",
+                   post_file="Posts.xml" ):
     """
-    Read Posts: read in Posts.xml files from a directory of directories,
-    ie. the main data dump directory.
+    Vectorize Data: read in all Posts.xml files from a directory of
+    directories, ie. the main data dump directory. Read entire dataset into
+    memory, then perform TF-IDF vectorization and clean the data further.
 
         in_protocol: [s3|disk]
         data_dir:    input directory, defaults to cwd
@@ -46,26 +47,29 @@ def read_corpus(in_protocol="disk",
         sys.exit(1)
 
 
-    # Set up an empty corpus
-    corpus = {}
+    # Set up empty data stores
+    posts = []          # store plain post data
+    categories = {}     # { category -> index (in posts) }
 
 
-    def store_vectors( in_file, fullpath ):
+    # Store Posts function {{{
+    def store_posts( fullpath, category ):
         """
-        Store the vectorized documents based on their category.
+        Store the documents in a dictionary based on their category.
+
+            in_file: the input filename to read (for category)
+            category: the category (label) of these posts
+
         """
 
-        # TODO: Grab the index of the rows which this category applies to
-        # so that we can stick them back in later, but stick all the
-        # elements in the same corpus data structure.
+        categories[category] = len( posts ) # store the starting index
 
-        category = in_file[ : in_file.index(".") ]
-        vectors = vectorize_file( fullpath, protocol=in_protocol )
-        corpus[category] = vectors
-
-        return corpus
+        post_data = read_posts( fullpath, protocol=in_protocol )
+        posts.extend( post_data )           # store the actual data
+    # }}}
 
 
+    # S3 Data {{{
     # Set up an s3 connection for reading the input over an s3 stream.
     if in_protocol == "s3":
         logging.info("Reading from s3 storage.")
@@ -78,11 +82,14 @@ def read_corpus(in_protocol="disk",
 
             f = f[:-1] # strip out newlines
             fullpath = s3_url + "/" + data_dir + "/" + f + "/" + post_file
+            category  = f[ : f.index(".") ]
 
             # store the vectors in the corpus
-            corpus = store_vectors( f, fullpath )
+            store_posts( fullpath, category )
+    # }}}
 
 
+    # Disk Data {{{
     # Otherwise read from the local disk.
     else:
         logging.info("Reading from disk.")
@@ -92,27 +99,46 @@ def read_corpus(in_protocol="disk",
 
             # Regenerate a full reference to the file we're reading in
             fullpath = os.path.join( data_dir, in_file, post_file )
+            category  = in_file[ : in_file.index(".") ]
 
             # store the vectors in the corpus
-            corpus = store_vectors( in_file, fullpath )
+            store_posts( fullpath, category )
+    # }}}
 
 
-    logging.info("Corpus vectorized.")
-    return corpus
+    # create a tf_idf vectorizer machine
+    tfidf_vectorizer = TfidfVectorizer(
+        input="content",
+        encoding="ascii",
+        decode_error="ignore",
+        strip_accents="ascii",
+        stop_words="english",
+        lowercase=True,
+        max_df=0.9,
+        use_idf=True,
+        smooth_idf=True,
+    )
+
+
+    # remove HTML entities and perform stop word removal
+    vectorized_posts = tfidf_vectorizer.fit_transform( posts )
+
+    logging.info("Data vectorized.")
+    return (categories, vectorized_posts)
 # }}}
 
 
 
-# Vectorize File {{{
-def vectorize_file( in_file, protocol="disk" ):
+# Read Posts {{{
+def read_posts( in_file, protocol="disk" ):
     """
-    Vectorize Category: read in, clean, and represent post data as a numpy
-    sparse tf-idf array.
+    Read Posts: read in data from file, parse the XML and spit the cleaned
+    output back in an array.
 
         in_file: read in from a Posts.xml file
         protocol: [s3|disk]
 
-    In order to clean posts, we remove html tags and perform stop-word
+    In order to clean posts, we remove html tags and (later) perform stop-word
     removal.
     """
 
@@ -138,19 +164,6 @@ def vectorize_file( in_file, protocol="disk" ):
     f.close()
     rows = tree.iter("row")
 
-    # create a tf_idf vectorizer machine
-    tfidf_vectorizer = TfidfVectorizer(
-        input="content",
-        encoding="ascii",
-        decode_error="ignore",
-        strip_accents="ascii",
-        stop_words="english",
-        lowercase=True,
-        max_df=0.9,
-        use_idf=True,
-        smooth_idf=True,
-    )
-
     posts = []
 
     # for each row, split out its contents and output
@@ -170,10 +183,7 @@ def vectorize_file( in_file, protocol="disk" ):
         # add to list in memory
         posts.append( body )
 
-    # remove HTML entities and perform stop word removal
-    vectorized_posts = tfidf_vectorizer.fit_transform( posts )
-
-    return vectorized_posts
+    return posts
 # }}}
 
 
@@ -192,8 +202,12 @@ if __name__ == "__main__":
     in_protocol = sys.argv[1]
     data_dir = sys.argv[2]
 
-    corpus = read_corpus( in_protocol=in_protocol, data_dir=data_dir )
-    print( corpus )
+    (categories, data) = vectorize_data( in_protocol=in_protocol,
+                                         data_dir=data_dir )
+
+    logging.debug( "Categories: " + str( categories ) )
+    logging.debug( "Data: " + str( data.shape ) )
+
 # }}}
 
 
