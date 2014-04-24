@@ -37,13 +37,28 @@ def read_corpus(in_protocol="disk",
 
     """
 
+
     # Verify that we have a valid input protocol, default to disk.
     if in_protocol not in ["s3", "disk"]:
         logging.error("Invalid input protocol.")
         sys.exit(1)
 
+
     # Set up an empty corpus
     corpus = {}
+
+
+    def store_vectors( in_file, fullpath ):
+        """
+        Store the vectorized documents based on their category.
+        """
+
+        category = in_file[ : in_file.index(".") ]
+        vectors = vectorize_file( fullpath, protocol=in_protocol )
+        corpus[category] = vectors
+
+        return corpus
+
 
     # Set up an s3 connection for reading the input over an s3 stream.
     if in_protocol == "s3":
@@ -58,10 +73,8 @@ def read_corpus(in_protocol="disk",
             f = f[:-1] # strip out newlines
             fullpath = s3_url + "/" + data_dir + "/" + f + "/" + post_file
 
-            # Store the vectorized documents based on their category
-            category = f[ : f.index(".") ]
-            vectors = vectorize_file( fullpath, protocol=in_protocol )
-            corpus[category] = vectors
+            # store the vectors in the corpus
+            corpus = store_vectors( f, fullpath )
 
     # Otherwise read from the local disk.
     else:
@@ -73,10 +86,8 @@ def read_corpus(in_protocol="disk",
             # Regenerate a full reference to the file we're reading in
             fullpath = os.path.join( data_dir, in_file, post_file )
 
-            # Store the vectorized documents based on their category
-            category = in_file[ : in_file.index(".") ]
-            vectors = vectorize_file( fullpath, protocol=in_protocol )
-            corpus[category] = vectors
+            # store the vectors in the corpus
+            corpus = store_vectors( in_file, fullpath )
 
     logging.info("Corpus vectorized.")
     return corpus
