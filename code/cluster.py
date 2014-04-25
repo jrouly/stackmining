@@ -10,12 +10,12 @@ import logging
 from sklearn import metrics
 from sklearn.cluster import KMeans
 
-from read_corpus import read_corpus
+from vectorize_data import vectorize_data
 
 
 
 # Perform KMeans {{{
-def do_kmeans( corpus ):
+def do_kmeans( data, labels ):
     """
     Do KMeans: perform KMeans clustering on an input corpus. Input is
     expected to be a dictionary of categories to tf-idf vectors.
@@ -29,7 +29,7 @@ def do_kmeans( corpus ):
 
 
 # Perform Affinity Propagation {{{
-def do_affinity_propagation( corpus ):
+def do_affinity_propagation( data, labels ):
     """
     Do Affinity Propagation: perform Affinity Propagation clustering on an
     input corpus.  Input is expected to be a dictionary of categories to
@@ -44,7 +44,7 @@ def do_affinity_propagation( corpus ):
 
 
 # Perform Mean Shift {{{
-def do_mean_shift( corpus ):
+def do_mean_shift( data, labels ):
     """
     Do Mean Shift: perform Mean Shift clustering on an input corpus.  Input
     is expected to be a dictionary of categories to tf-idf vectors.
@@ -58,7 +58,7 @@ def do_mean_shift( corpus ):
 
 
 # Perform Spectral Clustering {{{
-def do_spectral( corpus ):
+def do_spectral( data, labels ):
     """
     Do Spectral: perform Spectral clustering on an input corpus.  Input is
     expected to be a dictionary of categories to tf-idf vectors.
@@ -72,7 +72,7 @@ def do_spectral( corpus ):
 
 
 # Perform Hierarchical {{{
-def do_hierarchical( corpus ):
+def do_hierarchical( data, labels ):
     """
     Do Hierarchical: perform Hierarchical clustering on an input corpus.
     Input is expected to be a dictionary of categories to tf-idf vectors.
@@ -86,7 +86,7 @@ def do_hierarchical( corpus ):
 
 
 # Perform DBSCAN {{{
-def do_dbscan( corpus ):
+def do_dbscan( data, labels ):
     """
     Do DBSCAN: perform DBSCAN clustering on an input corpus.
     Input is expected to be a dictionary of categories to tf-idf vectors.
@@ -100,7 +100,7 @@ def do_dbscan( corpus ):
 
 
 # Perform Gaussian {{{
-def do_gaussian( corpus ):
+def do_gaussian( data, labels ):
     """
     Do Gaussian: perform Gaussian Mixture Modeling clustering on an input
     corpus.  Input is expected to be a dictionary of categories to tf-idf
@@ -108,6 +108,27 @@ def do_gaussian( corpus ):
     """
 
     logging.info("Beginning Gaussian Mixture Modeling clustering.")
+
+    return
+# }}}
+
+
+
+# Debug method {{{
+def do_debug( data, labels ):
+    """
+    Do Debug: Just for testing and funsies.
+    """
+
+    logging.info("Beginning debug clustering.")
+
+    #from sklearn.naive_bayes import GaussianNB
+    #clf = GaussianNB()
+    #clf.fit( data.toarray()[:-5], labels[:-5] )
+    #predictions = clf.predict( data.toarray()[-5:] )
+
+    #logging.debug( predictions )
+    #logging.debug( labels[-5:] )
 
     return
 # }}}
@@ -137,31 +158,36 @@ if __name__ == "__main__":
                   "spectral",
                   "hierarchical",
                   "dbscan",
-                  "gaussian"]
+                  "gaussian",
+                  "debug"]
 
-    # read and vectorize the corpus
-    corpus = read_corpus( in_protocol=in_protocol, data_dir=data_dir )
+    # read and vectorize the data
+    (labels, data) = vectorize_data( in_protocol=in_protocol,
+                                     data_dir=data_dir )
 
     if algorithm == "kmeans":
-        do_kmeans( corpus )
+        do_kmeans( data, labels )
 
     if algorithm == "ap":
-        do_ap( )
+        do_ap( data, labels )
 
     if algorithm == "meanshift":
-        do_meanshift( )
+        do_meanshift( data, labels )
 
     if algorithm == "spectral":
-        do_spectral( )
+        do_spectral( data, labels )
 
     if algorithm == "hierarhical":
-        do_hierarchical( )
+        do_hierarchical( data, labels )
 
     if algorithm == "dbscan":
-        do_dbscan( )
+        do_dbscan( data, labels )
 
     if algorithm == "gaussian":
-        do_gaussian( )
+        do_gaussian( data)
+
+    if algorithm == "debug":
+        do_debug( data, labels )
 # }}}
 
 
