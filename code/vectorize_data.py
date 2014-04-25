@@ -13,6 +13,8 @@ import numpy
 
 from s3file import s3open
 
+from collections import Counter
+
 from lxml.etree import parse
 from lxml.html import document_fromstring
 
@@ -48,8 +50,8 @@ def vectorize_data(in_protocol="disk",
 
 
     # Set up empty data stores
-    posts = []          # store plain post data
-    categories = {}     # { category -> index (in posts) }
+    posts = []      # store plain post data
+    labels = []     # list of labels, corresponds to each post
 
 
     # Store Posts function {{{
@@ -62,10 +64,14 @@ def vectorize_data(in_protocol="disk",
 
         """
 
-        categories[category] = len( posts ) # store the starting index
-
+        # read in the post data and store it in the posts list
         post_data = read_posts( fullpath, protocol=in_protocol )
-        posts.extend( post_data )           # store the actual data
+        posts.extend( post_data )
+
+        # generate an appropriate num of labels for the posts
+        num_posts = len( post_data )
+        labels.extend( [category] * num_posts )
+
     # }}}
 
 
@@ -125,7 +131,7 @@ def vectorize_data(in_protocol="disk",
     vectorized_posts = tfidf_vectorizer.fit_transform( posts )
 
     logging.info("Data vectorized.")
-    return (categories, vectorized_posts)
+    return (labels, vectorized_posts)
 # }}}
 
 
@@ -203,10 +209,12 @@ if __name__ == "__main__":
     in_protocol = sys.argv[1]
     data_dir = sys.argv[2]
 
-    (categories, data) = vectorize_data( in_protocol=in_protocol,
+    (labels, data) = vectorize_data( in_protocol=in_protocol,
                                          data_dir=data_dir )
 
-    logging.debug( "Categories: " + str( categories ) )
+    label_counts = Counter( labels )
+
+    logging.debug( "Labels: " + str( label_counts ) )
     logging.debug( "Data: " + str( data.shape ) )
 
 # }}}
