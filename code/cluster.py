@@ -22,7 +22,14 @@ def do_kmeans( data, labels ):
     """
 
     logging.info("Beginning KMeans clustering.")
+    km = KMeans(n_clusters=8, init='k-means++', max_iter=100, n_init=1)
 
+    km.fit(data)
+    print("Homogeneity: %0.3f" % metrics.homogeneity_score(labels, km.labels_))
+    print("Completeness: %0.3f" % metrics.completeness_score(labels, km.labels_))
+    print("V-measure: %0.3f" % metrics.v_measure_score(labels, km.labels_))
+    print("Adjusted Rand-Index: %.3f"
+      % metrics.adjusted_rand_score(labels, km.labels_))
     return
 # }}}
 
