@@ -3,12 +3,12 @@ Author: Michel Rouly
 Date:   2014-04-24
 """
 
-
 import sys
 import logging
+import time
 
 from sklearn import metrics
-from sklearn.cluster import KMeans
+from sklearn import cluster
 
 from vectorize_data import vectorize_data
 
@@ -22,14 +22,16 @@ def do_kmeans( data, labels ):
     """
 
     logging.info("Beginning KMeans clustering.")
-    km = KMeans(n_clusters=8, init='k-means++', max_iter=100, n_init=1)
+    km = cluster.MiniBatchKMeans(n_clusters=8, init='k-means++', n_init=1, init_size=1000, batch_size=1000)
 
+    t0 = time.time()
     km.fit(data)
+    t1 = time.time()
+
     print("Homogeneity: %0.3f" % metrics.homogeneity_score(labels, km.labels_))
     print("Completeness: %0.3f" % metrics.completeness_score(labels, km.labels_))
     print("V-measure: %0.3f" % metrics.v_measure_score(labels, km.labels_))
-    print("Adjusted Rand-Index: %.3f"
-      % metrics.adjusted_rand_score(labels, km.labels_))
+    print("Adjusted Rand-Index: %.3f" % metrics.adjusted_rand_score(labels, km.labels_))
     return
 # }}}
 
@@ -44,7 +46,7 @@ def do_affinity_propagation( data, labels ):
     """
 
     logging.info("Beginning Affinity Propagation clustering.")
-
+    
     return
 # }}}
 
@@ -85,8 +87,18 @@ def do_hierarchical( data, labels ):
     Input is expected to be a dictionary of categories to tf-idf vectors.
     """
 
-    logging.info("Beginning Hierarhical clustering.")
+    logging.info("Beginning Wards Hierarhical clustering.")
 
+    ward = cluster.Ward(n_clusters=2, connectivity=None, n_components=None, compute_full_tree='auto')
+    t0 = time.time()
+    ward.fit(data.toarray())
+    t1 = time.time()
+
+    print("Homogeneity: %0.3f" % metrics.homogeneity_score(labels, ward.labels_))
+    print("Completeness: %0.3f" % metrics.completeness_score(labels, ward.labels_))
+    print("V-measure: %0.3f" % metrics.v_measure_score(labels, ward.labels_))
+    print("Adjusted Rand-Index: %.3f" % metrics.adjusted_rand_score(labels, ward.labels_))
+    
     return
 # }}}
 
