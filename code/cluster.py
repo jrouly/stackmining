@@ -27,7 +27,7 @@ def do_kmeans( data, labels ):
     t0 = time.time()
     km.fit(data)
     t1 = time.time()
-
+    print("done in %fs" % (t1 - t0))
     print("Homogeneity: %0.3f" % metrics.homogeneity_score(labels, km.labels_))
     print("Completeness: %0.3f" % metrics.completeness_score(labels, km.labels_))
     print("V-measure: %0.3f" % metrics.v_measure_score(labels, km.labels_))
@@ -90,10 +90,11 @@ def do_hierarchical( data, labels ):
     logging.info("Beginning Wards Hierarhical clustering.")
 
     ward = cluster.Ward(n_clusters=2, connectivity=None, n_components=None, compute_full_tree='auto')
+    data = data.toarray()
     t0 = time.time()
-    ward.fit(data.toarray())
+    ward.fit(data)
     t1 = time.time()
-
+    print("done in %fs" % (t1 - t0))
     print("Homogeneity: %0.3f" % metrics.homogeneity_score(labels, ward.labels_))
     print("Completeness: %0.3f" % metrics.completeness_score(labels, ward.labels_))
     print("V-measure: %0.3f" % metrics.v_measure_score(labels, ward.labels_))
