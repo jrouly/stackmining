@@ -13,6 +13,7 @@ from sklearn import metrics
 from sklearn.cluster import MiniBatchKMeans      # Fast large scale KMeans
 from sklearn.cluster import Ward                 # Ward's method
 from sklearn.cluster import AffinityPropagation  # Affinity Propagation
+from sklearn.cluster import MeanShift            # Mean Shift
 
 from vectorize_data import vectorize_data
 
@@ -102,9 +103,34 @@ def do_mean_shift( data, labels ):
     is expected to be a dictionary of categories to tf-idf vectors.
     """
 
+    # Construct a Mean Shift clustering machine
+    ms = MeanShift(
+        #bandwidth=,
+        #seeds=,
+        min_bin_freq=1,     # only use bins with at least min frequency
+        cluster_all=True,   # use all points
+    )
+
     logging.info("Beginning Mean Shift clustering.")
 
-    return
+    data = data.toarray()
+    t0 = time()
+    ms.fit(data)
+    t1 = time()
+
+    # Perform metrics
+    runtime       = (t1 - t0)
+    homogeneity   = metrics.homogeneity_score(labels, ms.labels_)
+    completeness  = metrics.completeness_score(labels, ms.labels_)
+    v_measure     = metrics.v_measure_score(labels, ms.labels_)
+    adjusted_rand = metrics.adjusted_rand_score(labels, ms.labels_)
+
+    # Output
+    logging.info("\tdone in       %fs"         % runtime)
+    logging.info("\tHomogeneity:  %0.3f"       % homogeneity)
+    logging.info("\tCompleteness: %0.3f"       % completeness)
+    logging.info("\tV-measure:    %0.3f"       % v_measure)
+    logging.info("\tAdjusted Rand-Index: %.3f" % adjusted_rand)
 # }}}
 
 
@@ -233,7 +259,7 @@ if __name__ == "__main__":
         do_affinity_propagation( data, labels )
 
     if algorithm == "meanshift":
-        do_meanshift( data, labels )
+        do_mean_shift( data, labels )
 
     if algorithm == "spectral":
         do_spectral( data, labels )
