@@ -131,8 +131,9 @@ def vectorize_data(in_protocol="disk",
     vectorized_posts = tfidf_vectorizer.fit_transform( posts )
 
     logging.info("Data vectorized.")
-    logging.debug( "Data size (entries, features): %d, %d" %
-            vectorized_posts.shape )
+    logging.debug("Number of entries:  %d." % vectorized_posts.shape[0])
+    logging.debug("Number of features: %d." % vectorized_posts.shape[1])
+
 
     return (labels, vectorized_posts)
 # }}}
@@ -167,7 +168,7 @@ def read_posts( in_file, protocol="disk" ):
     else:
         f = open( in_file, 'r' )
 
-    logging.debug("Vectorizing over input file.")
+    # logging.debug("Vectorizing over input file.")
 
     # construct tree over xml data
     tree = parse( f )
