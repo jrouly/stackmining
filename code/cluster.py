@@ -17,7 +17,7 @@ from vectorize_data import vectorize_data
 
 
 
-# TODO: Perform KMeans {{{
+# Perform KMeans {{{
 def do_kmeans( data, labels ):
     """
     Do KMeans: perform KMeans clustering on an input corpus. Input is
