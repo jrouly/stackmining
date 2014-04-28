@@ -33,18 +33,21 @@ def run_clustering( clusterer, data, labels ):
     t1 = time()
 
     # Perform metrics
-    runtime       = (t1 - t0)
-    homogeneity   = metrics.homogeneity_score(   labels, clusterer.labels_ )
-    completeness  = metrics.completeness_score(  labels, clusterer.labels_ )
-    v_measure     = metrics.v_measure_score(     labels, clusterer.labels_ )
-    adjusted_rand = metrics.adjusted_rand_score( labels, clusterer.labels_ )
+    runtime         = (t1 - t0)
+    homogeneity     = metrics.homogeneity_score(   labels, clusterer.labels_ )
+    completeness    = metrics.completeness_score(  labels, clusterer.labels_ )
+    v_measure       = metrics.v_measure_score(     labels, clusterer.labels_ )
+    adjusted_rand   = metrics.adjusted_rand_score( labels, clusterer.labels_ )
+    adjusted_mutual = metrics.adjusted_mutual_info_score( labels,
+                                                          clusterer.labels_ )
 
     # Output to logs
-    logging.info("\tdone in       %fs"         % runtime)
-    logging.info("\tHomogeneity:  %0.3f"       % homogeneity)
-    logging.info("\tCompleteness: %0.3f"       % completeness)
-    logging.info("\tV-measure:    %0.3f"       % v_measure)
-    logging.info("\tAdjusted Rand-Index: %.3f" % adjusted_rand)
+    logging.info(" |-        Execution time: %fs"   % runtime)
+    logging.info(" |-           Homogeneity: %0.3f" % homogeneity)
+    logging.info(" |-          Completeness: %0.3f" % completeness)
+    logging.info(" |-             V-measure: %0.3f" % v_measure)
+    logging.info(" |-   Adjusted Rand-Index: %.3f"  % adjusted_rand)
+    logging.info(" |-  Adjusted Mutual Info: %.3f"  % adjusted_mutual)
 # }}}
 
 
@@ -162,6 +165,8 @@ def do_dbscan( data, labels ):
     Do DBSCAN: perform DBSCAN clustering on an input corpus.
     Input is expected to be a dictionary of categories to tf-idf vectors.
     """
+
+    #db = cluster.
 
     logging.info("Beginning DBSCAN clustering.")
     logging.error("DBSCAN is not yet implemented.")
