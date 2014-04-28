@@ -47,11 +47,11 @@ def do_kmeans( data, labels ):
     adjusted_rand = metrics.adjusted_rand_score(labels, km.labels_)
 
     # Output
-    logging.info("done in       %fs"         % runtime)
-    logging.info("Homogeneity:  %0.3f"       % homogeneity)
-    logging.info("Completeness: %0.3f"       % completeness)
-    logging.info("V-measure:    %0.3f"       % v_measure)
-    logging.info("Adjusted Rand-Index: %.3f" % adjusted_rand)
+    logging.info("\tdone in       %fs"         % runtime)
+    logging.info("\tHomogeneity:  %0.3f"       % homogeneity)
+    logging.info("\tCompleteness: %0.3f"       % completeness)
+    logging.info("\tV-measure:    %0.3f"       % v_measure)
+    logging.info("\tAdjusted Rand-Index: %.3f" % adjusted_rand)
 # }}}
 
 
@@ -128,11 +128,11 @@ def do_wards( data, labels ):
     adjusted_rand = metrics.adjusted_rand_score(labels, ward.labels_)
 
     # Output
-    logging.info("done in       %fs"         % (t1 - t0))
-    logging.info("Homogeneity:  %0.3f"       % homogeneity)
-    logging.info("Completeness: %0.3f"       % completeness)
-    logging.info("V-measure:    %0.3f"       % v_measure)
-    logging.info("Adjusted Rand-Index: %.3f" % adjusted_rand)
+    logging.info("\tdone in       %fs"         % (t1 - t0))
+    logging.info("\tHomogeneity:  %0.3f"       % homogeneity)
+    logging.info("\tCompleteness: %0.3f"       % completeness)
+    logging.info("\tV-measure:    %0.3f"       % v_measure)
+    logging.info("\tAdjusted Rand-Index: %.3f" % adjusted_rand)
 # }}}
 
 
@@ -170,7 +170,7 @@ def do_gaussian( data, labels ):
 if __name__ == "__main__":
 
     # turn on logging
-    logging.basicConfig(level=logging.DEBUG,
+    logging.basicConfig(level=logging.INFO,
                         format='%(levelname)s: %(message)s')
 
     algorithms = "kmeans|ap|meanshift|spectral|wards|dbscan|gaussian"
