@@ -220,28 +220,31 @@ if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG,
                         format='%(levelname)s: %(message)s')
 
-    algorithms = "kmeans|ap|meanshift|spectral|wards|dbscan|gaussian"
+    options = "kmeans|ap|meanshift|spectral|wards|dbscan|gaussian"
 
     if len( sys.argv ) != 4:
         logging.error( "Usage: python cluster.py [s3|disk] data_dir [%s]" %
-                algorithms )
+                options )
         sys.exit( 1 )
 
     # pull in parameters from the command line
     in_protocol = sys.argv[1]
     data_dir = sys.argv[2]
-    algorithm = sys.argv[3]
+    requested_algorithms = sys.argv[3]
 
     # available algorithms
-    algorithms = ["kmeans",
-                  "ap",
-                  "meanshift",
-                  "spectral",
-                  "wards",
-                  "dbscan",
-                  "gaussian"]
+    known_algorithms = ["kmeans",
+                        "ap",
+                        "meanshift",
+                        "spectral",
+                        "wards",
+                        "dbscan",
+                        "gaussian"]
 
-    if algorithm not in algorithms:
+    requested_algorithms = requested_algorithms.split(" ")
+    for algorithm in requested_algorithms:
+
+    if algorithm not in known_algorithms:
         logging.error( "Input \"%s\" is an unrecognized algorithm." % algorithm )
         sys.exit( 1 )
 
