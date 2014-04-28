@@ -109,10 +109,8 @@ def do_wards( data, labels ):
 
     # Construct a Ward's clustering machine
     ward = Ward(
-        n_clusters=2,
-        connectivity=None,
-        n_components=None,
-        compute_full_tree='auto'
+        n_clusters=3,               # expected number of clusters
+        connectivity=None,          # no connectivity matrix
     )
 
     logging.info("Beginning Ward's Hierarhical clustering.")
