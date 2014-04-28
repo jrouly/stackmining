@@ -10,8 +10,9 @@ from time import time
 
 from sklearn import metrics
 
-from sklearn.cluster import MiniBatchKMeans # Fast large scale KMeans
-from sklearn.cluster import Ward            # Ward's method
+from sklearn.cluster import MiniBatchKMeans      # Fast large scale KMeans
+from sklearn.cluster import Ward                 # Ward's method
+from sklearn.cluster import AffinityPropagation  # Affinity Propagation
 
 from vectorize_data import vectorize_data
 
@@ -56,7 +57,7 @@ def do_kmeans( data, labels ):
 
 
 
-# TODO: Perform Affinity Propagation {{{
+# Perform Affinity Propagation {{{
 def do_affinity_propagation( data, labels ):
     """
     Do Affinity Propagation: perform Affinity Propagation clustering on an
@@ -64,9 +65,32 @@ def do_affinity_propagation( data, labels ):
     tf-idf vectors.
     """
 
+    # Construct an Affinity Propagation clustering machine
+    ap = AffinityPropagation(
+        damping=0.5,            # damping factor
+        convergence_iter=15,    # number of no-change iterations to converge
+        affinity="euclidean",   # similarity metric
+    )
+
     logging.info("Beginning Affinity Propagation clustering.")
 
-    return
+    t0 = time()
+    ap.fit(data)
+    t1 = time()
+
+    # Perform metrics
+    runtime       = (t1 - t0)
+    homogeneity   = metrics.homogeneity_score(labels, ap.labels_)
+    completeness  = metrics.completeness_score(labels, ap.labels_)
+    v_measure     = metrics.v_measure_score(labels, ap.labels_)
+    adjusted_rand = metrics.adjusted_rand_score(labels, ap.labels_)
+
+    # Output
+    logging.info("\tdone in       %fs"         % runtime)
+    logging.info("\tHomogeneity:  %0.3f"       % homogeneity)
+    logging.info("\tCompleteness: %0.3f"       % completeness)
+    logging.info("\tV-measure:    %0.3f"       % v_measure)
+    logging.info("\tAdjusted Rand-Index: %.3f" % adjusted_rand)
 # }}}
 
 
@@ -115,7 +139,7 @@ def do_wards( data, labels ):
 
     logging.info("Beginning Ward's Hierarhical clustering.")
 
-    data = data.toarray()
+    data = data.toarray() # convert to a dense matrix
     t0 = time()
     ward.fit(data)
     t1 = time()
@@ -206,7 +230,7 @@ if __name__ == "__main__":
         do_kmeans( data, labels )
 
     if algorithm == "ap":
-        do_ap( data, labels )
+        do_affinity_propagation( data, labels )
 
     if algorithm == "meanshift":
         do_meanshift( data, labels )
