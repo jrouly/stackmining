@@ -15,6 +15,40 @@ from vectorize_data import vectorize_data
 
 
 
+# Run clustering algorithm {{{
+def run_clustering( clusterer, data, labels ):
+    """
+    Cluster: Using a predefined and parameterized clustering algorithm, fit
+    some dataset and perform metrics given a set of ground-truth labels.
+
+        clusterer: the clustering algorithm, from sklearn
+        data:      array-like dataset input
+        labels:    vector of ground-truth labels
+
+    """
+
+    # Time the operation
+    t0 = time()
+    clusterer.fit(data)
+    t1 = time()
+
+    # Perform metrics
+    runtime       = (t1 - t0)
+    homogeneity   = metrics.homogeneity_score(   labels, clusterer.labels_ )
+    completeness  = metrics.completeness_score(  labels, clusterer.labels_ )
+    v_measure     = metrics.v_measure_score(     labels, clusterer.labels_ )
+    adjusted_rand = metrics.adjusted_rand_score( labels, clusterer.labels_ )
+
+    # Output to logs
+    logging.info("\tdone in       %fs"         % runtime)
+    logging.info("\tHomogeneity:  %0.3f"       % homogeneity)
+    logging.info("\tCompleteness: %0.3f"       % completeness)
+    logging.info("\tV-measure:    %0.3f"       % v_measure)
+    logging.info("\tAdjusted Rand-Index: %.3f" % adjusted_rand)
+# }}}
+
+
+
 # Perform KMeans {{{
 def do_kmeans( data, labels ):
     """
@@ -22,7 +56,6 @@ def do_kmeans( data, labels ):
     expected to be a dictionary of categories to tf-idf vectors.
     """
 
-    # Construct a KMeans clustering machine
     km = cluster.MiniBatchKMeans(
         n_clusters=3,       # expected number of clusters
         init="k-means++",   # initialization method (smart)
@@ -33,23 +66,7 @@ def do_kmeans( data, labels ):
 
     logging.info("Beginning KMeans clustering.")
 
-    t0 = time()
-    km.fit(data)
-    t1 = time()
-
-    # Perform metrics
-    runtime       = (t1 - t0)
-    homogeneity   = metrics.homogeneity_score(labels, km.labels_)
-    completeness  = metrics.completeness_score(labels, km.labels_)
-    v_measure     = metrics.v_measure_score(labels, km.labels_)
-    adjusted_rand = metrics.adjusted_rand_score(labels, km.labels_)
-
-    # Output
-    logging.info("\tdone in       %fs"         % runtime)
-    logging.info("\tHomogeneity:  %0.3f"       % homogeneity)
-    logging.info("\tCompleteness: %0.3f"       % completeness)
-    logging.info("\tV-measure:    %0.3f"       % v_measure)
-    logging.info("\tAdjusted Rand-Index: %.3f" % adjusted_rand)
+    run_clustering( km, data, labels )
 # }}}
 
 
@@ -62,7 +79,6 @@ def do_affinity_propagation( data, labels ):
     tf-idf vectors.
     """
 
-    # Construct an Affinity Propagation clustering machine
     ap = cluster.AffinityPropagation(
         damping=0.5,            # damping factor
         convergence_iter=15,    # number of no-change iterations to converge
@@ -71,23 +87,7 @@ def do_affinity_propagation( data, labels ):
 
     logging.info("Beginning Affinity Propagation clustering.")
 
-    t0 = time()
-    ap.fit(data)
-    t1 = time()
-
-    # Perform metrics
-    runtime       = (t1 - t0)
-    homogeneity   = metrics.homogeneity_score(labels, ap.labels_)
-    completeness  = metrics.completeness_score(labels, ap.labels_)
-    v_measure     = metrics.v_measure_score(labels, ap.labels_)
-    adjusted_rand = metrics.adjusted_rand_score(labels, ap.labels_)
-
-    # Output
-    logging.info("\tdone in       %fs"         % runtime)
-    logging.info("\tHomogeneity:  %0.3f"       % homogeneity)
-    logging.info("\tCompleteness: %0.3f"       % completeness)
-    logging.info("\tV-measure:    %0.3f"       % v_measure)
-    logging.info("\tAdjusted Rand-Index: %.3f" % adjusted_rand)
+    run_clustering( ap, data, labels )
 # }}}
 
 
@@ -99,7 +99,6 @@ def do_mean_shift( data, labels ):
     is expected to be a dictionary of categories to tf-idf vectors.
     """
 
-    # Construct a Mean Shift clustering machine
     ms = cluster.MeanShift(
         #bandwidth=,
         #seeds=,
@@ -111,35 +110,18 @@ def do_mean_shift( data, labels ):
     logging.warn("Meanshift is not a scalable clustering algorithm.")
 
     data = data.toarray()
-    t0 = time()
-    ms.fit(data)
-    t1 = time()
-
-    # Perform metrics
-    runtime       = (t1 - t0)
-    homogeneity   = metrics.homogeneity_score(labels, ms.labels_)
-    completeness  = metrics.completeness_score(labels, ms.labels_)
-    v_measure     = metrics.v_measure_score(labels, ms.labels_)
-    adjusted_rand = metrics.adjusted_rand_score(labels, ms.labels_)
-
-    # Output
-    logging.info("\tdone in       %fs"         % runtime)
-    logging.info("\tHomogeneity:  %0.3f"       % homogeneity)
-    logging.info("\tCompleteness: %0.3f"       % completeness)
-    logging.info("\tV-measure:    %0.3f"       % v_measure)
-    logging.info("\tAdjusted Rand-Index: %.3f" % adjusted_rand)
+    run_clustering( ms, data, labels )
 # }}}
 
 
 
-# TODO: Perform Spectral Clustering {{{
+# Perform Spectral Clustering {{{
 def do_spectral( data, labels ):
     """
     Do Spectral: perform Spectral clustering on an input corpus.  Input is
     expected to be a dictionary of categories to tf-idf vectors.
     """
 
-    # Construct a Spectral clustering machine
     sc = cluster.SpectralClustering(
         n_clusters=2,               # expected number of clusters
         eigen_solver="arpack",      # eigenvalue decomposition strategy
@@ -148,25 +130,7 @@ def do_spectral( data, labels ):
 
     logging.info("Beginning Spectral clustering.")
 
-    t0 = time()
-    sc.fit(data)
-    t1 = time()
-
-    # Perform metrics
-    runtime       = (t1 - t0)
-    homogeneity   = metrics.homogeneity_score(labels, sc.labels_)
-    completeness  = metrics.completeness_score(labels, sc.labels_)
-    v_measure     = metrics.v_measure_score(labels, sc.labels_)
-    adjusted_rand = metrics.adjusted_rand_score(labels, sc.labels_)
-
-    # Output
-    logging.info("\tdone in       %fs"         % runtime)
-    logging.info("\tHomogeneity:  %0.3f"       % homogeneity)
-    logging.info("\tCompleteness: %0.3f"       % completeness)
-    logging.info("\tV-measure:    %0.3f"       % v_measure)
-    logging.info("\tAdjusted Rand-Index: %.3f" % adjusted_rand)
-
-    return
+    run_clustering( sc, data, labels )
 # }}}
 
 
@@ -179,32 +143,15 @@ def do_wards( data, labels ):
     tf-idf vectors.
     """
 
-    # Construct a Ward's clustering machine
-    ward = cluster.Ward(
+    wh = cluster.Ward(
         n_clusters=3,               # expected number of clusters
         connectivity=None,          # no connectivity matrix
     )
 
     logging.info("Beginning Ward's Hierarhical clustering.")
 
-    data = data.toarray() # convert to a dense matrix
-    t0 = time()
-    ward.fit(data)
-    t1 = time()
-
-    # Perform metrics
-    runtime       = (t1 - t0)
-    homogeneity   = metrics.homogeneity_score(labels, ward.labels_)
-    completeness  = metrics.completeness_score(labels, ward.labels_)
-    v_measure     = metrics.v_measure_score(labels, ward.labels_)
-    adjusted_rand = metrics.adjusted_rand_score(labels, ward.labels_)
-
-    # Output
-    logging.info("\tdone in       %fs"         % (t1 - t0))
-    logging.info("\tHomogeneity:  %0.3f"       % homogeneity)
-    logging.info("\tCompleteness: %0.3f"       % completeness)
-    logging.info("\tV-measure:    %0.3f"       % v_measure)
-    logging.info("\tAdjusted Rand-Index: %.3f" % adjusted_rand)
+    data = data.toarray()
+    run_clustering( wh, data, labels )
 # }}}
 
 
