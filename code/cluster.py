@@ -107,9 +107,8 @@ def do_mean_shift( data, labels ):
         cluster_all=True,   # use all points
     )
 
-    #bandwidth = estimate_bandwidth
-
     logging.info("Beginning Mean Shift clustering.")
+    logging.warn("Meanshift is not a scalable clustering algorithm.")
 
     data = data.toarray()
     t0 = time()
@@ -218,7 +217,7 @@ def do_gaussian( data, labels ):
 if __name__ == "__main__":
 
     # turn on logging
-    logging.basicConfig(level=logging.INFO,
+    logging.basicConfig(level=logging.DEBUG,
                         format='%(levelname)s: %(message)s')
 
     algorithms = "kmeans|ap|meanshift|spectral|wards|dbscan|gaussian"
