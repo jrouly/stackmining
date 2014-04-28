@@ -181,22 +181,6 @@ def do_dbscan( data, labels ):
 
 
 
-# TODO: Perform Gaussian {{{
-def do_gaussian( data, labels ):
-    """
-    Do Gaussian: perform Gaussian Mixture Modeling clustering on an input
-    corpus.  Input is expected to be a dictionary of categories to tf-idf
-    vectors.
-    """
-
-    logging.info("Beginning Gaussian Mixture Modeling clustering.")
-    logging.error("Gaussian Mixter Modeling is not yet implemented.")
-
-    return
-# }}}
-
-
-
 # Executable (Main) {{{
 if __name__ == "__main__":
 
@@ -205,7 +189,7 @@ if __name__ == "__main__":
                         format='%(levelname)s: %(message)s')
 
     # algorithm options
-    options = "kmeans|ap|meanshift|spectral|wards|dbscan|gaussian"
+    options = "kmeans|ap|meanshift|spectral|wards|dbscan"
 
     # ensure we have at least the minimum required params
     if len( sys.argv ) < 4:
@@ -224,8 +208,7 @@ if __name__ == "__main__":
                         "meanshift",
                         "spectral",
                         "wards",
-                        "dbscan",
-                        "gaussian"]
+                        "dbscan"]
 
     # read and vectorize the data
     (labels, data) = vectorize_data( in_protocol=in_protocol,
@@ -255,9 +238,6 @@ if __name__ == "__main__":
 
         if algorithm == "dbscan":
             do_dbscan( data, labels )
-
-        if algorithm == "gaussian":
-            do_gaussian( data, labels )
 # }}}
 
 
