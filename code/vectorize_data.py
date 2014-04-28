@@ -167,7 +167,7 @@ def read_posts( in_file, protocol="disk" ):
     else:
         f = open( in_file, 'r' )
 
-    logging.info("Vectorizing over input file.")
+    logging.debug("Vectorizing over input file.")
 
     # construct tree over xml data
     tree = parse( f )
