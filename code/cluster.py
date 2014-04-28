@@ -92,7 +92,7 @@ def do_affinity_propagation( data, labels ):
 
 
 
-# TODO: Perform Mean Shift {{{
+# Perform Mean Shift {{{
 def do_mean_shift( data, labels ):
     """
     Do Mean Shift: perform Mean Shift clustering on an input corpus.  Input
@@ -140,6 +140,7 @@ def do_spectral( data, labels ):
     """
 
     logging.info("Beginning Spectral clustering.")
+    logging.error("Spectral clustering is not yet implemented.")
 
     return
 # }}}
@@ -192,6 +193,7 @@ def do_dbscan( data, labels ):
     """
 
     logging.info("Beginning DBSCAN clustering.")
+    logging.error("DBSCAN is not yet implemented.")
 
     return
 # }}}
@@ -207,6 +209,7 @@ def do_gaussian( data, labels ):
     """
 
     logging.info("Beginning Gaussian Mixture Modeling clustering.")
+    logging.error("Gaussian Mixter Modeling is not yet implemented.")
 
     return
 # }}}
@@ -273,7 +276,7 @@ if __name__ == "__main__":
             do_dbscan( data, labels )
 
         if algorithm == "gaussian":
-            do_gaussian( data)
+            do_gaussian( data, labels )
 # }}}
 
 
