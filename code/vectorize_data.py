@@ -1,6 +1,6 @@
 """
 Author: Michel Rouly
-Date:   2014-04-24
+Date:   2014-04-28
 """
 
 
@@ -131,6 +131,9 @@ def vectorize_data(in_protocol="disk",
     vectorized_posts = tfidf_vectorizer.fit_transform( posts )
 
     logging.info("Data vectorized.")
+    logging.debug( "Data size (entries, features): %d, %d" %
+            vectorized_posts.shape )
+
     return (labels, vectorized_posts)
 # }}}
 
