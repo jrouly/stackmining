@@ -99,7 +99,7 @@ def do_spectral( data, labels ):
 
 
 
-# TODO: Perform Ward's Hierarchical Clustering {{{
+# Perform Ward's Hierarchical Clustering {{{
 def do_wards( data, labels ):
     """
     Do Ward's Hierarchical: perform Ward's Hierarchical clustering on an
