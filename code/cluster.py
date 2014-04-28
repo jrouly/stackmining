@@ -99,11 +99,12 @@ def do_spectral( data, labels ):
 
 
 
-# TODO: Perform Hierarchical Clustering {{{
-def do_hierarchical( data, labels ):
+# TODO: Perform Ward's Hierarchical Clustering {{{
+def do_wards( data, labels ):
     """
-    Do Hierarchical: perform Hierarchical clustering on an input corpus.
-    Input is expected to be a dictionary of categories to tf-idf vectors.
+    Do Ward's Hierarchical: perform Ward's Hierarchical clustering on an
+    input corpus.  Input is expected to be a dictionary of categories to
+    tf-idf vectors.
     """
 
     # Construct a Ward's clustering machine
@@ -167,27 +168,6 @@ def do_gaussian( data, labels ):
 
 
 
-# TODO: Debug method {{{
-def do_debug( data, labels ):
-    """
-    Do Debug: Just for testing and funsies.
-    """
-
-    logging.info("Beginning debug clustering.")
-
-    #from sklearn.naive_bayes import GaussianNB
-    #clf = GaussianNB()
-    #clf.fit( data.toarray()[:-5], labels[:-5] )
-    #predictions = clf.predict( data.toarray()[-5:] )
-
-    #logging.debug( predictions )
-    #logging.debug( labels[-5:] )
-
-    return
-# }}}
-
-
-
 # Executable (Main) {{{
 if __name__ == "__main__":
 
@@ -195,7 +175,7 @@ if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG,
                         format='%(levelname)s: %(message)s')
 
-    algorithms = "kmeans|ap|meanshift|spectral|hierarchical|dbscan|gaussian"
+    algorithms = "kmeans|ap|meanshift|spectral|wards|dbscan|gaussian"
 
     if len( sys.argv ) != 4:
         logging.error( "Usage: python cluster.py [s3|disk] data_dir [%s]" %
@@ -212,10 +192,9 @@ if __name__ == "__main__":
                   "ap",
                   "meanshift",
                   "spectral",
-                  "hierarchical",
+                  "wards",
                   "dbscan",
-                  "gaussian",
-                  "debug"]
+                  "gaussian"]
 
     # read and vectorize the data
     (labels, data) = vectorize_data( in_protocol=in_protocol,
@@ -233,17 +212,14 @@ if __name__ == "__main__":
     if algorithm == "spectral":
         do_spectral( data, labels )
 
-    if algorithm == "hierarchical":
-        do_hierarchical( data, labels )
+    if algorithm == "wards":
+        do_wards( data, labels )
 
     if algorithm == "dbscan":
         do_dbscan( data, labels )
 
     if algorithm == "gaussian":
         do_gaussian( data)
-
-    if algorithm == "debug":
-        do_debug( data, labels )
 # }}}
 
 
