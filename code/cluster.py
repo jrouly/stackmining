@@ -196,11 +196,13 @@ if __name__ == "__main__":
                   "dbscan",
                   "gaussian"]
 
+    if algorithm not in algorithms:
+        logging.error( "Input \"%s\" is an unrecognized algorithm." % algorithm )
+        sys.exit( 1 )
+
     # read and vectorize the data
     (labels, data) = vectorize_data( in_protocol=in_protocol,
                                      data_dir=data_dir )
-
-    logging.debug( "Data size (entries, features): %d, %d" % data.shape )
 
     if algorithm == "kmeans":
         do_kmeans( data, labels )
