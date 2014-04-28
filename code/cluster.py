@@ -42,12 +42,12 @@ def run_clustering( clusterer, data, labels ):
                                                           clusterer.labels_ )
 
     # Output to logs
-    logging.info(" |-        Execution time: %fs"   % runtime)
-    logging.info(" |-           Homogeneity: %0.3f" % homogeneity)
-    logging.info(" |-          Completeness: %0.3f" % completeness)
-    logging.info(" |-             V-measure: %0.3f" % v_measure)
-    logging.info(" |-   Adjusted Rand-Index: %.3f"  % adjusted_rand)
-    logging.info(" |-  Adjusted Mutual Info: %.3f"  % adjusted_mutual)
+    logging.info("  |-        Execution time: %fs"   % runtime)
+    logging.info("  |-           Homogeneity: %0.3f" % homogeneity)
+    logging.info("  |-          Completeness: %0.3f" % completeness)
+    logging.info("  |-             V-measure: %0.3f" % v_measure)
+    logging.info("  |-   Adjusted Rand-Index: %.3f"  % adjusted_rand)
+    logging.info("  |-  Adjusted Mutual Info: %.3f"  % adjusted_mutual)
 # }}}
 
 
@@ -159,19 +159,24 @@ def do_wards( data, labels ):
 
 
 
-# TODO: Perform DBSCAN {{{
+# Perform DBSCAN {{{
 def do_dbscan( data, labels ):
     """
     Do DBSCAN: perform DBSCAN clustering on an input corpus.
     Input is expected to be a dictionary of categories to tf-idf vectors.
     """
 
-    #db = cluster.
+    db = cluster.DBSCAN(
+        eps=0.01,          # max distance between two neighbours
+        min_samples=1,  # number of neighbors for a core point
+        #metric=,       #
+        #random_state=, #
+    )
 
     logging.info("Beginning DBSCAN clustering.")
-    logging.error("DBSCAN is not yet implemented.")
 
-    return
+    data = data.toarray()
+    run_clustering( db, data, labels )
 # }}}
 
 
