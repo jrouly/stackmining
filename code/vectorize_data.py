@@ -27,7 +27,7 @@ from sklearn.pipeline import Pipeline
 def vectorize_data(in_protocol="disk",
                    data_dir=".",
                    s3_url="http://cs484project.s3.amazonaws.com",
-                   s3_index_file="s3_index_toy.txt",
+                   s3_index_file="s3_index.txt",
                    post_file="Posts.xml" ):
     """
     Vectorize Data: read in all Posts.xml files from a directory of
