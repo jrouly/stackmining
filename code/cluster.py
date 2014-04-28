@@ -220,9 +220,11 @@ if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG,
                         format='%(levelname)s: %(message)s')
 
+    # algorithm options
     options = "kmeans|ap|meanshift|spectral|wards|dbscan|gaussian"
 
-    if len( sys.argv ) != 4:
+    # ensure we have at least the minimum required params
+    if len( sys.argv ) < 4:
         logging.error( "Usage: python cluster.py [s3|disk] data_dir [%s]" %
                 options )
         sys.exit( 1 )
@@ -230,7 +232,7 @@ if __name__ == "__main__":
     # pull in parameters from the command line
     in_protocol = sys.argv[1]
     data_dir = sys.argv[2]
-    requested_algorithms = sys.argv[3]
+    requested_algorithms = sys.argv[3:]
 
     # available algorithms
     known_algorithms = ["kmeans",
@@ -241,37 +243,37 @@ if __name__ == "__main__":
                         "dbscan",
                         "gaussian"]
 
-    requested_algorithms = requested_algorithms.split(" ")
-    for algorithm in requested_algorithms:
-
-    if algorithm not in known_algorithms:
-        logging.error( "Input \"%s\" is an unrecognized algorithm." % algorithm )
-        sys.exit( 1 )
-
     # read and vectorize the data
     (labels, data) = vectorize_data( in_protocol=in_protocol,
-                                     data_dir=data_dir )
+                                    data_dir=data_dir )
 
-    if algorithm == "kmeans":
-        do_kmeans( data, labels )
+    # loop over all requested algorithms
+    for algorithm in requested_algorithms:
 
-    if algorithm == "ap":
-        do_affinity_propagation( data, labels )
+        # verify that requested algorithm is known
+        if algorithm not in known_algorithms:
+            logging.error( "Algorithm \"%s\" is not recognized." % algorithm )
 
-    if algorithm == "meanshift":
-        do_mean_shift( data, labels )
+        if algorithm == "kmeans":
+            do_kmeans( data, labels )
 
-    if algorithm == "spectral":
-        do_spectral( data, labels )
+        if algorithm == "ap":
+            do_affinity_propagation( data, labels )
 
-    if algorithm == "wards":
-        do_wards( data, labels )
+        if algorithm == "meanshift":
+            do_mean_shift( data, labels )
 
-    if algorithm == "dbscan":
-        do_dbscan( data, labels )
+        if algorithm == "spectral":
+            do_spectral( data, labels )
 
-    if algorithm == "gaussian":
-        do_gaussian( data)
+        if algorithm == "wards":
+            do_wards( data, labels )
+
+        if algorithm == "dbscan":
+            do_dbscan( data, labels )
+
+        if algorithm == "gaussian":
+            do_gaussian( data)
 # }}}
 
 
