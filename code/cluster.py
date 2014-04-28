@@ -9,9 +9,8 @@ from time import time
 
 from sklearn import metrics
 
-from sklearn.cluster import KMeans          # KMeans
+from sklearn.cluster import MiniBatchKMeans # Fast large scale KMeans
 from sklearn.cluster import Ward            # Ward's method
-from sklearn.cluster import MiniBatchKMeans # Mini batch KMeans
 
 from vectorize_data import vectorize_data
 
@@ -26,11 +25,11 @@ def do_kmeans( data, labels ):
 
     # Construct a KMeans clustering machine
     km = MiniBatchKMeans(
-        n_clusters=8,
-        init='k-means++',
-        n_init=1,
-        init_size=1000,
-        batch_size=1000
+        n_clusters=3,       # expected number of clusters
+        init="k-means++",   # initialization method (smart)
+        n_init=5,           # number of random retries
+        #init_size=1000,
+        #batch_size=1000
     )
 
     logging.info("Beginning KMeans clustering.")
