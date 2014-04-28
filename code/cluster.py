@@ -5,39 +5,58 @@ Date:   2014-04-24
 
 import sys
 import logging
-import time
+from time import time
 
 from sklearn import metrics
-from sklearn import cluster
+
+from sklearn.cluster import KMeans          # KMeans
+from sklearn.cluster import Ward            # Ward's method
+from sklearn.cluster import MiniBatchKMeans # Mini batch KMeans
 
 from vectorize_data import vectorize_data
 
 
 
-# Perform KMeans {{{
+# TODO: Perform KMeans {{{
 def do_kmeans( data, labels ):
     """
     Do KMeans: perform KMeans clustering on an input corpus. Input is
     expected to be a dictionary of categories to tf-idf vectors.
     """
 
-    logging.info("Beginning KMeans clustering.")
-    km = cluster.MiniBatchKMeans(n_clusters=8, init='k-means++', n_init=1, init_size=1000, batch_size=1000)
+    # Construct a KMeans clustering machine
+    km = MiniBatchKMeans(
+        n_clusters=8,
+        init='k-means++',
+        n_init=1,
+        init_size=1000,
+        batch_size=1000
+    )
 
-    t0 = time.time()
+    logging.info("Beginning KMeans clustering.")
+
+    t0 = time()
     km.fit(data)
-    t1 = time.time()
-    print("done in %fs" % (t1 - t0))
-    print("Homogeneity: %0.3f" % metrics.homogeneity_score(labels, km.labels_))
-    print("Completeness: %0.3f" % metrics.completeness_score(labels, km.labels_))
-    print("V-measure: %0.3f" % metrics.v_measure_score(labels, km.labels_))
-    print("Adjusted Rand-Index: %.3f" % metrics.adjusted_rand_score(labels, km.labels_))
-    return
+    t1 = time()
+
+    # Perform metrics
+    runtime       = (t1 - t0)
+    homogeneity   = metrics.homogeneity_score(labels, km.labels_)
+    completeness  = metrics.completeness_score(labels, km.labels_)
+    v_measure     = metrics.v_measure_score(labels, km.labels_)
+    adjusted_rand = metrics.adjusted_rand_score(labels, km.labels_)
+
+    # Output
+    logging.info("done in       %fs"         % runtime)
+    logging.info("Homogeneity:  %0.3f"       % homogeneity)
+    logging.info("Completeness: %0.3f"       % completeness)
+    logging.info("V-measure:    %0.3f"       % v_measure)
+    logging.info("Adjusted Rand-Index: %.3f" % adjusted_rand)
 # }}}
 
 
 
-# Perform Affinity Propagation {{{
+# TODO: Perform Affinity Propagation {{{
 def do_affinity_propagation( data, labels ):
     """
     Do Affinity Propagation: perform Affinity Propagation clustering on an
@@ -46,13 +65,13 @@ def do_affinity_propagation( data, labels ):
     """
 
     logging.info("Beginning Affinity Propagation clustering.")
-    
+
     return
 # }}}
 
 
 
-# Perform Mean Shift {{{
+# TODO: Perform Mean Shift {{{
 def do_mean_shift( data, labels ):
     """
     Do Mean Shift: perform Mean Shift clustering on an input corpus.  Input
@@ -66,7 +85,7 @@ def do_mean_shift( data, labels ):
 
 
 
-# Perform Spectral Clustering {{{
+# TODO: Perform Spectral Clustering {{{
 def do_spectral( data, labels ):
     """
     Do Spectral: perform Spectral clustering on an input corpus.  Input is
@@ -80,32 +99,46 @@ def do_spectral( data, labels ):
 
 
 
-# Perform Hierarchical {{{
+# TODO: Perform Hierarchical Clustering {{{
 def do_hierarchical( data, labels ):
     """
     Do Hierarchical: perform Hierarchical clustering on an input corpus.
     Input is expected to be a dictionary of categories to tf-idf vectors.
     """
 
-    logging.info("Beginning Wards Hierarhical clustering.")
+    # Construct a Ward's clustering machine
+    ward = Ward(
+        n_clusters=2,
+        connectivity=None,
+        n_components=None,
+        compute_full_tree='auto'
+    )
 
-    ward = cluster.Ward(n_clusters=2, connectivity=None, n_components=None, compute_full_tree='auto')
+    logging.info("Beginning Ward's Hierarhical clustering.")
+
     data = data.toarray()
-    t0 = time.time()
+    t0 = time()
     ward.fit(data)
-    t1 = time.time()
-    print("done in %fs" % (t1 - t0))
-    print("Homogeneity: %0.3f" % metrics.homogeneity_score(labels, ward.labels_))
-    print("Completeness: %0.3f" % metrics.completeness_score(labels, ward.labels_))
-    print("V-measure: %0.3f" % metrics.v_measure_score(labels, ward.labels_))
-    print("Adjusted Rand-Index: %.3f" % metrics.adjusted_rand_score(labels, ward.labels_))
-    
-    return
+    t1 = time()
+
+    # Perform metrics
+    runtime       = (t1 - t0)
+    homogeneity   = metrics.homogeneity_score(labels, ward.labels_)
+    completeness  = metrics.completeness_score(labels, ward.labels_)
+    v_measure     = metrics.v_measure_score(labels, ward.labels_)
+    adjusted_rand = metrics.adjusted_rand_score(labels, ward.labels_)
+
+    # Output
+    logging.info("done in       %fs"         % (t1 - t0))
+    logging.info("Homogeneity:  %0.3f"       % homogeneity)
+    logging.info("Completeness: %0.3f"       % completeness)
+    logging.info("V-measure:    %0.3f"       % v_measure)
+    logging.info("Adjusted Rand-Index: %.3f" % adjusted_rand)
 # }}}
 
 
 
-# Perform DBSCAN {{{
+# TODO: Perform DBSCAN {{{
 def do_dbscan( data, labels ):
     """
     Do DBSCAN: perform DBSCAN clustering on an input corpus.
@@ -119,7 +152,7 @@ def do_dbscan( data, labels ):
 
 
 
-# Perform Gaussian {{{
+# TODO: Perform Gaussian {{{
 def do_gaussian( data, labels ):
     """
     Do Gaussian: perform Gaussian Mixture Modeling clustering on an input
@@ -134,7 +167,7 @@ def do_gaussian( data, labels ):
 
 
 
-# Debug method {{{
+# TODO: Debug method {{{
 def do_debug( data, labels ):
     """
     Do Debug: Just for testing and funsies.
@@ -162,8 +195,11 @@ if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG,
                         format='%(levelname)s: %(message)s')
 
+    algorithms = "kmeans|ap|meanshift|spectral|hierarchical|dbscan|gaussian"
+
     if len( sys.argv ) != 4:
-        logging.error( "Usage: python cluster.py [s3|disk] data_dir [kmeans]" )
+        logging.error( "Usage: python cluster.py [s3|disk] data_dir [%s]" %
+                algorithms )
         sys.exit( 1 )
 
     # pull in parameters from the command line
@@ -197,7 +233,7 @@ if __name__ == "__main__":
     if algorithm == "spectral":
         do_spectral( data, labels )
 
-    if algorithm == "hierarhical":
+    if algorithm == "hierarchical":
         do_hierarchical( data, labels )
 
     if algorithm == "dbscan":
