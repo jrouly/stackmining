@@ -1,6 +1,7 @@
 """
 Author: Michel Rouly
-Date:   2014-04-24
+Author: Joshua Wells
+Date:   2014-04-28
 """
 
 import sys
@@ -29,7 +30,7 @@ def do_kmeans( data, labels ):
         init="k-means++",   # initialization method (smart)
         n_init=5,           # number of random retries
         #init_size=1000,
-        #batch_size=1000
+        batch_size=1000
     )
 
     logging.info("Beginning KMeans clustering.")
@@ -198,6 +199,8 @@ if __name__ == "__main__":
     # read and vectorize the data
     (labels, data) = vectorize_data( in_protocol=in_protocol,
                                      data_dir=data_dir )
+
+    logging.debug( "Data size (entries, features): %d, %d" % data.shape )
 
     if algorithm == "kmeans":
         do_kmeans( data, labels )
