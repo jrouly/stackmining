@@ -9,11 +9,7 @@ import logging
 from time import time
 
 from sklearn import metrics
-
-from sklearn.cluster import MiniBatchKMeans      # Fast large scale KMeans
-from sklearn.cluster import Ward                 # Ward's method
-from sklearn.cluster import AffinityPropagation  # Affinity Propagation
-from sklearn.cluster import MeanShift            # Mean Shift
+from sklearn import cluster
 
 from vectorize_data import vectorize_data
 
@@ -27,7 +23,7 @@ def do_kmeans( data, labels ):
     """
 
     # Construct a KMeans clustering machine
-    km = MiniBatchKMeans(
+    km = cluster.MiniBatchKMeans(
         n_clusters=3,       # expected number of clusters
         init="k-means++",   # initialization method (smart)
         n_init=5,           # number of random retries
@@ -67,7 +63,7 @@ def do_affinity_propagation( data, labels ):
     """
 
     # Construct an Affinity Propagation clustering machine
-    ap = AffinityPropagation(
+    ap = cluster.AffinityPropagation(
         damping=0.5,            # damping factor
         convergence_iter=15,    # number of no-change iterations to converge
         affinity="euclidean",   # similarity metric
@@ -104,12 +100,14 @@ def do_mean_shift( data, labels ):
     """
 
     # Construct a Mean Shift clustering machine
-    ms = MeanShift(
+    ms = cluster.MeanShift(
         #bandwidth=,
         #seeds=,
         min_bin_freq=1,     # only use bins with at least min frequency
         cluster_all=True,   # use all points
     )
+
+    #bandwidth = estimate_bandwidth
 
     logging.info("Beginning Mean Shift clustering.")
 
@@ -158,7 +156,7 @@ def do_wards( data, labels ):
     """
 
     # Construct a Ward's clustering machine
-    ward = Ward(
+    ward = cluster.Ward(
         n_clusters=3,               # expected number of clusters
         connectivity=None,          # no connectivity matrix
     )
