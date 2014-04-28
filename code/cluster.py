@@ -139,8 +139,32 @@ def do_spectral( data, labels ):
     expected to be a dictionary of categories to tf-idf vectors.
     """
 
+    # Construct a Spectral clustering machine
+    sc = cluster.SpectralClustering(
+        n_clusters=2,               # expected number of clusters
+        eigen_solver="arpack",      # eigenvalue decomposition strategy
+        assign_labels="discretize", # label assignment strategy
+    )
+
     logging.info("Beginning Spectral clustering.")
-    logging.error("Spectral clustering is not yet implemented.")
+
+    t0 = time()
+    sc.fit(data)
+    t1 = time()
+
+    # Perform metrics
+    runtime       = (t1 - t0)
+    homogeneity   = metrics.homogeneity_score(labels, sc.labels_)
+    completeness  = metrics.completeness_score(labels, sc.labels_)
+    v_measure     = metrics.v_measure_score(labels, sc.labels_)
+    adjusted_rand = metrics.adjusted_rand_score(labels, sc.labels_)
+
+    # Output
+    logging.info("\tdone in       %fs"         % runtime)
+    logging.info("\tHomogeneity:  %0.3f"       % homogeneity)
+    logging.info("\tCompleteness: %0.3f"       % completeness)
+    logging.info("\tV-measure:    %0.3f"       % v_measure)
+    logging.info("\tAdjusted Rand-Index: %.3f" % adjusted_rand)
 
     return
 # }}}
