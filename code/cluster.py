@@ -54,18 +54,24 @@ def run_clustering( clusterer, data, labels ):
 
 
 # Perform KMeans {{{
-def do_kmeans( data, labels ):
+def do_kmeans( data, labels, config ):
     """
     Do KMeans: perform KMeans clustering on an input corpus. Input is
     expected to be a dictionary of categories to tf-idf vectors.
     """
 
+    init          = config.get("kmeans", "init")
+    n_init     = config.getint("kmeans", "n_init")
+    init_size  = config.getint("kmeans", "init_size")
+    batch_size = config.getint("kmeans", "batch_size")
+
     km = cluster.MiniBatchKMeans(
         n_clusters=len(set(labels)), # expected number of clusters
-        init="k-means++",            # initialization method (smart)
-        n_init=5,                    # number of random retries
-        #init_size=1000,
-        batch_size=1000
+
+        init=init,                   # initialization method (smart)
+        n_init=n_init,               # number of random retries
+        init_size=init_size,
+        batch_size=batch_size
     )
 
     logging.info("Beginning KMeans clustering.")
@@ -76,17 +82,21 @@ def do_kmeans( data, labels ):
 
 
 # Perform Affinity Propagation {{{
-def do_affinity_propagation( data, labels ):
+def do_affinity_propagation( data, labels, config ):
     """
     Do Affinity Propagation: perform Affinity Propagation clustering on an
     input corpus.  Input is expected to be a dictionary of categories to
     tf-idf vectors.
     """
 
+    damping          = config.getfloat("ap", "damping")
+    convergence_iter = config.getfloat("ap", "convergence_iter")
+    affinity              = config.get("ap", "affinity")
+
     ap = cluster.AffinityPropagation(
-        damping=0.5,            # damping factor
-        convergence_iter=15,    # number of no-change iterations to converge
-        affinity="euclidean",   # similarity metric
+        damping=damping,                   # damping factor
+        convergence_iter=convergence_iter, # convergence threshold
+        affinity=affinity,                 # similarity metric
     )
 
     logging.info("Beginning Affinity Propagation clustering.")
@@ -97,15 +107,13 @@ def do_affinity_propagation( data, labels ):
 
 
 # Perform Mean Shift {{{
-def do_mean_shift( data, labels ):
+def do_mean_shift( data, labels, config ):
     """
     Do Mean Shift: perform Mean Shift clustering on an input corpus.  Input
     is expected to be a dictionary of categories to tf-idf vectors.
     """
 
     ms = cluster.MeanShift(
-        #bandwidth=,
-        #seeds=,
         min_bin_freq=1,     # only use bins with at least min frequency
         cluster_all=True,   # use all points
     )
@@ -120,7 +128,7 @@ def do_mean_shift( data, labels ):
 
 
 # Perform Spectral Clustering {{{
-def do_spectral( data, labels ):
+def do_spectral( data, labels, config ):
     """
     Do Spectral: perform Spectral clustering on an input corpus.  Input is
     expected to be a dictionary of categories to tf-idf vectors.
@@ -140,7 +148,7 @@ def do_spectral( data, labels ):
 
 
 # Perform Ward's Hierarchical Clustering {{{
-def do_wards( data, labels ):
+def do_wards( data, labels, config ):
     """
     Do Ward's Hierarchical: perform Ward's Hierarchical clustering on an
     input corpus.  Input is expected to be a dictionary of categories to
@@ -161,17 +169,18 @@ def do_wards( data, labels ):
 
 
 # Perform DBSCAN {{{
-def do_dbscan( data, labels ):
+def do_dbscan( data, labels, config ):
     """
     Do DBSCAN: perform DBSCAN clustering on an input corpus.
     Input is expected to be a dictionary of categories to tf-idf vectors.
     """
 
+    eps       = config.getfloat("dbscan", "eps")
+    min_samples = config.getint("dbscan", "min_samples")
+
     db = cluster.DBSCAN(
-        eps=0.01,          # max distance between two neighbours
-        min_samples=1,  # number of neighbors for a core point
-        #metric=,       #
-        #random_state=, #
+        eps=eps,                  # max distance between two neighbours
+        min_samples=min_samples,  # number of neighbors for a core point
     )
 
     logging.info("Beginning DBSCAN clustering.")
@@ -225,22 +234,22 @@ if __name__ == "__main__":
             logging.error( "Algorithm \"%s\" is not recognized." % algorithm )
 
         if algorithm == "kmeans":
-            do_kmeans( data, labels )
+            do_kmeans( data, labels, config )
 
         if algorithm == "ap":
-            do_affinity_propagation( data, labels )
+            do_affinity_propagation( data, labels, config )
 
         if algorithm == "meanshift":
-            do_mean_shift( data, labels )
+            do_mean_shift( data, labels, config )
 
         if algorithm == "spectral":
-            do_spectral( data, labels )
+            do_spectral( data, labels, config )
 
         if algorithm == "wards":
-            do_wards( data, labels )
+            do_wards( data, labels, config )
 
         if algorithm == "dbscan":
-            do_dbscan( data, labels )
+            do_dbscan( data, labels, config )
 # }}}
 
 
