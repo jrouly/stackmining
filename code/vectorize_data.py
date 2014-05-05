@@ -7,6 +7,7 @@ Date:   2014-04-28
 import os
 import sys
 import time
+import random
 import logging
 
 import numpy
@@ -121,18 +122,20 @@ def vectorize_data(in_protocol="disk",
         stop_words="english",   # remove english stopwords
         lowercase=True,         # lowercase everything
         max_df=0.90,            # terms must occur in under X documents
-        min_df=10,               # terms must occur in at least X documents
+        min_df=10,              # terms must occur in at least X documents
         use_idf=True,           # inverse document frequency (weighting)
         smooth_idf=True,        # smooth the data out
     )
 
 
     # remove HTML entities and perform stop word removal
+    logging.info("Vectorizing dataset.")
     vectorized_posts = tfidf_vectorizer.fit_transform( posts )
 
     logging.info("Data vectorized.")
-    logging.debug("Number of entries:  %d." % vectorized_posts.shape[0])
-    logging.debug("Number of features: %d." % vectorized_posts.shape[1])
+    logging.debug("Number of entries:    %d." % vectorized_posts.shape[0])
+    logging.debug("Number of features:   %d." % vectorized_posts.shape[1])
+    logging.debug("Number of categories: %d." % len( set( labels ) ) )
 
 
     return (labels, vectorized_posts)
@@ -141,13 +144,14 @@ def vectorize_data(in_protocol="disk",
 
 
 # Read Posts {{{
-def read_posts( in_file, protocol="disk" ):
+def read_posts( in_file, protocol="disk", sample=0 ):
     """
     Read Posts: read in data from file, parse the XML and spit the cleaned
     output back in an array.
 
-        in_file: read in from a Posts.xml file
+        in_file:  read in from a Posts.xml file
         protocol: [s3|disk]
+        sample:   max sample size
 
     In order to clean posts, we remove html tags and (later) perform stop-word
     removal.
@@ -194,6 +198,12 @@ def read_posts( in_file, protocol="disk" ):
             continue
 
         posts.append( body )
+
+        # Only read in at most sample data points. We assume that the posts
+        # are in no particularly relevant order, so this simulates uniform
+        # random sampling.
+        if sample > 0 and len( posts ) >= sample:
+            break
 
     return posts
 # }}}
