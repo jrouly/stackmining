@@ -121,8 +121,8 @@ def vectorize_data(in_protocol="disk",
         strip_accents="ascii",  # strip fancy characters
         stop_words="english",   # remove english stopwords
         lowercase=True,         # lowercase everything
-        max_df=0.90,            # terms must occur in under X documents
-        min_df=10,              # terms must occur in at least X documents
+        max_df=0.95,            # terms must occur in under X documents
+        min_df=50,              # terms must occur in at least X documents
         use_idf=True,           # inverse document frequency (weighting)
         smooth_idf=True,        # smooth the data out
     )
@@ -144,7 +144,7 @@ def vectorize_data(in_protocol="disk",
 
 
 # Read Posts {{{
-def read_posts( in_file, protocol="disk", sample=0 ):
+def read_posts( in_file, protocol="disk", sample=200 ):
     """
     Read Posts: read in data from file, parse the XML and spit the cleaned
     output back in an array.

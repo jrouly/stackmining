@@ -60,9 +60,9 @@ def do_kmeans( data, labels ):
     """
 
     km = cluster.MiniBatchKMeans(
-        n_clusters=3,       # expected number of clusters
-        init="k-means++",   # initialization method (smart)
-        n_init=5,           # number of random retries
+        n_clusters=len(set(labels)), # expected number of clusters
+        init="k-means++",            # initialization method (smart)
+        n_init=5,                    # number of random retries
         #init_size=1000,
         batch_size=1000
     )
@@ -126,9 +126,9 @@ def do_spectral( data, labels ):
     """
 
     sc = cluster.SpectralClustering(
-        n_clusters=2,               # expected number of clusters
-        eigen_solver="arpack",      # eigenvalue decomposition strategy
-        assign_labels="discretize", # label assignment strategy
+        n_clusters=len(set(labels)), # expected number of clusters
+        eigen_solver="arpack",       # eigenvalue decomposition strategy
+        assign_labels="discretize",  # label assignment strategy
     )
 
     logging.info("Beginning Spectral clustering.")
@@ -147,8 +147,8 @@ def do_wards( data, labels ):
     """
 
     wh = cluster.Ward(
-        n_clusters=3,               # expected number of clusters
-        connectivity=None,          # no connectivity matrix
+        n_clusters=len(set(labels)), # expected number of clusters
+        connectivity=None,           # no connectivity matrix
     )
 
     logging.info("Beginning Ward's Hierarhical clustering.")
