@@ -15,7 +15,7 @@ from s3file import s3open
 
 from collections import Counter
 
-from lxml.etree import parse
+from lxml import etree
 from lxml.html import document_fromstring
 
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -120,8 +120,8 @@ def vectorize_data(in_protocol="disk",
         strip_accents="ascii",  # strip fancy characters
         stop_words="english",   # remove english stopwords
         lowercase=True,         # lowercase everything
-        max_df=0.95,            # terms must occur in under X documents
-        min_df=5,               # terms must occur in at least X documents
+        max_df=0.90,            # terms must occur in under X documents
+        min_df=10,               # terms must occur in at least X documents
         use_idf=True,           # inverse document frequency (weighting)
         smooth_idf=True,        # smooth the data out
     )
@@ -170,28 +170,29 @@ def read_posts( in_file, protocol="disk" ):
 
     # logging.debug("Vectorizing over input file.")
 
-    # construct tree over xml data
-    tree = parse( f )
-    f.close()
-    rows = tree.iter("row")
-
+    # Read in and clean the bodies of the rows.
     posts = []
+    for event, element in etree.iterparse( f ):
 
-    # for each row, split out its contents and output
-    for row in rows:
+        # Read in the row
+        body = element.get( "Body", u"" )
+        body = body.strip()
 
-        body = row.get("Body")
-
-        # skip empty documents
+        # Strip out empty posts before processing
         if len( body ) == 0:
             continue
 
-        # strip out html
+        # Strip out html
+
         body = document_fromstring( body )
         body = body.text_content()
         body = body.encode("ascii", "ignore")
+        body = body.strip()
 
-        # add to list in memory
+        # Strip out empty posts after processing
+        if len( body ) == 0:
+            continue
+
         posts.append( body )
 
     return posts
