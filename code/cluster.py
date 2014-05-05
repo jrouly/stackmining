@@ -6,6 +6,7 @@ Date:   2014-04-28
 
 import sys
 import logging
+import ConfigParser
 from time import time
 
 from sklearn import metrics
@@ -192,15 +193,18 @@ if __name__ == "__main__":
     options = "kmeans|ap|meanshift|spectral|wards|dbscan"
 
     # ensure we have at least the minimum required params
-    if len( sys.argv ) < 4:
-        logging.error( "Usage: python cluster.py [s3|disk] data_dir [%s]" %
+    if len( sys.argv ) < 3:
+        logging.error( "Usage: python cluster.py [config.ini] [%s]" %
                 options )
         sys.exit( 1 )
 
     # pull in parameters from the command line
-    in_protocol = sys.argv[1]
-    data_dir = sys.argv[2]
-    requested_algorithms = sys.argv[3:]
+    config_file = sys.argv[1]
+    requested_algorithms = sys.argv[2:]
+
+    # read configuration file
+    config = ConfigParser.ConfigParser( allow_no_value=True )
+    config.readfp( open( config_file ) )
 
     # available algorithms
     known_algorithms = ["kmeans",
@@ -211,8 +215,7 @@ if __name__ == "__main__":
                         "dbscan"]
 
     # read and vectorize the data
-    (labels, data) = vectorize_data( in_protocol=in_protocol,
-                                    data_dir=data_dir )
+    (labels, data) = vectorize_data( config )
 
     # loop over all requested algorithms
     for algorithm in requested_algorithms:

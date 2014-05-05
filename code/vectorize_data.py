@@ -9,6 +9,7 @@ import sys
 import time
 import random
 import logging
+import ConfigParser
 
 import numpy
 
@@ -25,24 +26,26 @@ from sklearn.pipeline import Pipeline
 
 
 # Vectorize Data {{{
-def vectorize_data(in_protocol="disk",
-                   data_dir=".",
-                   s3_url="http://cs484project.s3.amazonaws.com",
-                   s3_index_file="s3_index_toy.txt",
-                   post_file="Posts.xml" ):
+def vectorize_data( config ):
     """
     Vectorize Data: read in all Posts.xml files from a directory of
     directories, ie. the main data dump directory. Read entire dataset into
     memory, then perform TF-IDF vectorization and clean the data further.
 
-        in_protocol: [s3|disk]
-        data_dir:    input directory, defaults to cwd
-        s3_url:      ignored if protocol is disk
-        s3_index_file: ignored if protocol is disk
-        post_file:   name of data files, defaults to Posts.xml
+    config: ConfigParser with documented fields
 
     """
 
+    # Read in necessary config values.
+    in_protocol   = config.get("input", "in_protocol")
+    data_dir      = config.get("input", "data_dir")
+    post_file     = config.get("input", "post_file")
+
+    s3_url        = config.get("input", "s3_url")
+    s3_index_file = config.get("input", "s3_index_file")
+
+    max_df   = config.getfloat("tfidf", "max_df")
+    min_df     = config.getint("tfidf", "min_df")
 
     # Verify that we have a valid input protocol, default to disk.
     if in_protocol not in ["s3", "disk"]:
@@ -60,18 +63,20 @@ def vectorize_data(in_protocol="disk",
         """
         Store the documents in a dictionary based on their category.
 
-            in_file: the input filename to read (for category)
-            category: the category (label) of these posts
+        in_file: the input filename to read (for category)
+        category: the category (label) of these posts
 
         """
 
         # read in the post data and store it in the posts list
-        post_data = read_posts( fullpath, protocol=in_protocol )
+        post_data = read_posts( fullpath, config )
         posts.extend( post_data )
 
         # generate an appropriate num of labels for the posts
         num_posts = len( post_data )
         labels.extend( [category] * num_posts )
+
+        logging.debug("Read %d posts." % num_posts)
 
     # }}}
 
@@ -124,8 +129,8 @@ def vectorize_data(in_protocol="disk",
         use_idf=True,           # inverse document frequency (weighting)
         smooth_idf=True,        # smooth the data out
 
-        max_df=0.95,            # terms must occur in under X documents
-        min_df=50,              # terms must occur in at least X documents
+        max_df=max_df,          # terms must occur in under X documents
+        min_df=min_df,          # terms must occur in at least X documents
     )
 
 
@@ -145,23 +150,20 @@ def vectorize_data(in_protocol="disk",
 
 
 # Read Posts {{{
-def read_posts( in_file, protocol="disk", sample=200 ):
+def read_posts( in_file, config ):
     """
     Read Posts: read in data from file, parse the XML and spit the cleaned
     output back in an array.
 
-        in_file:  read in from a Posts.xml file
-        protocol: [s3|disk]
-        sample:   max sample size
+    config: ConfigParser with documented fields
 
     In order to clean posts, we remove html tags and (later) perform stop-word
     removal.
     """
 
-    # Verify that we have a valid input protocol, default to disk.
-    if protocol not in ["s3", "disk"]:
-        logging.error("Invalid input protocol.")
-        sys.exit(1)
+    # Read in necessary config values.
+    protocol = config.get("input", "in_protocol")
+    sample   = config.getint("input", "sample_size")
 
     f = None # empty file handle
 
@@ -218,16 +220,21 @@ if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG,
                         format='%(levelname)s: %(message)s')
 
-    if len( sys.argv ) != 3:
-        logging.error( "Usage: python read_corpus.py [s3|disk] data_dir" )
+    if len( sys.argv ) != 2:
+        logging.error( "Usage: python read_corpus.py [config.ini]" )
         sys.exit( 1 )
 
-    in_protocol = sys.argv[1]
-    data_dir = sys.argv[2]
+    # pull in parameters from the command line
+    config_file = sys.argv[1]
 
-    (labels, data) = vectorize_data( in_protocol=in_protocol,
-                                         data_dir=data_dir )
+    # read configuration file
+    config = ConfigParser.ConfigParser( allow_no_value=True )
+    config.readfp( open( config_file ) )
 
+    # run vectorization
+    (labels, data) = vectorize_data( config )
+
+    # count number of labels
     label_counts = Counter( labels )
 
     logging.debug( "Labels: " + str( label_counts ) )
