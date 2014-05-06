@@ -90,7 +90,7 @@ def do_affinity_propagation( data, labels, config ):
     """
 
     damping          = config.getfloat("ap", "damping")
-    convergence_iter = config.getfloat("ap", "convergence_iter")
+    convergence_iter   = config.getint("ap", "convergence_iter")
     affinity              = config.get("ap", "affinity")
 
     ap = cluster.AffinityPropagation(
@@ -199,20 +199,22 @@ if __name__ == "__main__":
                         format='%(levelname)s: %(message)s')
 
     # algorithm options
-    options = "kmeans|ap|meanshift|spectral|wards|dbscan"
+    algorithm_options = "kmeans|ap|meanshift|spectral|wards|dbscan"
 
     # ensure we have at least the minimum required params
-    if len( sys.argv ) < 3:
-        logging.error( "Usage: python cluster.py [config.ini] [%s]" %
-                options )
+    if len( sys.argv ) < 4:
+        logging.error( "Usage: python cluster.py [input.ini] [cluster.ini] [%s]" %
+                algorithm_options )
         sys.exit( 1 )
 
     # pull in parameters from the command line
-    config_file = sys.argv[1]
-    requested_algorithms = sys.argv[2:]
+    input_file  = sys.argv[1]
+    config_file = sys.argv[2]
+    requested_algorithms = sys.argv[3:]
 
     # read configuration file
     config = ConfigParser.ConfigParser( allow_no_value=True )
+    config.readfp( open( input_file ) )
     config.readfp( open( config_file ) )
 
     # available algorithms

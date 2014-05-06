@@ -162,8 +162,8 @@ def read_posts( in_file, config ):
     """
 
     # Read in necessary config values.
-    protocol = config.get("input", "in_protocol")
-    sample   = config.getint("input", "sample_size")
+    protocol  = config.get("input", "in_protocol")
+    sample = config.getint("tfidf", "sample_size")
 
     f = None # empty file handle
 
@@ -220,15 +220,17 @@ if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG,
                         format='%(levelname)s: %(message)s')
 
-    if len( sys.argv ) != 2:
-        logging.error( "Usage: python read_corpus.py [config.ini]" )
+    if len( sys.argv ) != 3:
+        logging.error( "Usage: python read_corpus.py [input.ini] [cluster.ini]" )
         sys.exit( 1 )
 
     # pull in parameters from the command line
-    config_file = sys.argv[1]
+    input_file  = sys.argv[1]
+    config_file = sys.argv[2]
 
     # read configuration file
     config = ConfigParser.ConfigParser( allow_no_value=True )
+    config.readfp( open( input_file ) )
     config.readfp( open( config_file ) )
 
     # run vectorization
