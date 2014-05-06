@@ -89,9 +89,9 @@ def do_affinity_propagation( data, labels, config ):
     tf-idf vectors.
     """
 
-    damping          = config.getfloat("ap", "damping")
-    convergence_iter   = config.getint("ap", "convergence_iter")
-    affinity              = config.get("ap", "affinity")
+    damping        = config.getfloat("ap", "damping")
+    convergence_iter = config.getint("ap", "convergence_iter")
+    affinity            = config.get("ap", "affinity")
 
     ap = cluster.AffinityPropagation(
         damping=damping,                   # damping factor
