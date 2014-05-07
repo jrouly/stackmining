@@ -1,0 +1,64 @@
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+[tfidf]
+
+; number of posts to sample from the file
+sample_size=
+
+; terms must occur in under max_df documents, use a percentage (decimal)
+max_df=
+
+; terms must occur in at least min_df documents, use a number (integer)
+min_df=
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+[kmeans]
+
+; Method for initialization, accepts "k-means++" or "random"
+init=
+
+; Number of random initializations to try
+n_init=
+
+; Number of initialization samples
+init_size=
+
+; Number of samples to process in a single batch
+batch_size=
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+[ap]
+
+; Which affinity to use, accepts "precomputed" and "euclidean"
+affinity=
+
+; Damping value, between 0.5 and 1.0
+damping=
+
+; Number of iterations with no change in number of estimated clusters
+convergence_iter=
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+[meanshift]
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+[spectral]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+[wards]
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+[dbscan]
+
+; Epsilon, max distance between two samples to be considered in the same
+; neighborhood
+eps=
+
+; Number of samples in a neighborhood to be considered a core point
+min_samples=

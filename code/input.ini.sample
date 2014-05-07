@@ -1,0 +1,17 @@
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+[input]
+
+; accepts "s3" or "disk" as valid input protocols
+in_protocol=
+
+; data input directory
+data_dir=
+
+; the url of the project data on s3, if relevant
+s3_url=
+
+; the file listing all data directories on the s3 server
+s3_index_file=
+
+; the name of the xml file containing post data within the data directory
+post_file=
