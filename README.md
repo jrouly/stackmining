@@ -36,4 +36,17 @@ Install dependencies
 
     pip install -r requirements.txt
 
-Have fun :)
+## Running Clustering
+
+Navigate to the code directory
+
+    cd code
+
+Initialize the appropriate configuration files
+
+    cp config/cluster.ini.sample config/cluster.ini
+    cp config/input.ini.sample config/input.ini
+
+Run the clustering script
+
+    python cluster.py config/input.ini config/cluster.ini [algorithm]
