@@ -1,0 +1,113 @@
+\documentclass[letterpaper,10pt]{article}
+
+\usepackage[fleqn]{amsmath}
+\usepackage{amstext}
+\usepackage{dcolumn}
+\usepackage{courier}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{amssymb}
+\usepackage{pifont}
+\usepackage{enumitem}
+\usepackage[normalem]{ulem}
+
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+
+\DeclareMathSymbol{\mlq}{\mathord}{operators}{``}
+\DeclareMathSymbol{\mrq}{\mathord}{operators}{`'}
+
+% Syntax highliting
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\small,
+    breaklines=true,
+    prebreak=\raisebox{0ex}[0ex][0ex]{\ensuremath{\hookleftarrow}},
+    frame=none,
+    showtabs=false,
+    showspaces=false,
+    showstringspaces=false,
+    keywordstyle=\color{Dandelion}\textbf,
+    stringstyle=\color{BrickRed},
+    commentstyle=\color{gray}\itshape,
+    numbers=left,
+    captionpos=t,
+    escapeinside={\%*}{*)},
+    morekeywords={minus},
+}
+
+\newcolumntype{d}[1]{D{.}{.}{#1} }
+
+\newcommand{\fref}[1]{Figure~\ref{#1}}
+
+\title{
+  \Huge\textbf{Mining StackExchange} \\
+  \LARGE Data Mining Final Project \\
+  CS 484 \\
+}
+\author{
+  Jean Michel Rouly\\
+  \texttt{jrouly@gmu.edu}
+  \and
+  Joshua Wells\\
+  \texttt{jwells@gmu.edu}
+}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+
+  \section{Problem Description}
+
+  Give a brief but precise description or definition of the problem or
+  hypothesis you set to evaluate.
+
+
+  \section{Related Work}
+
+  How does this problem and the method relate to problems/methods others
+  have developed in the past.
+
+
+  \section{Solution}
+
+  How did you solve the problem? Describe the technical approach. Tell us
+  what method/algorithm did you use, develop or extend and how did you
+  implement it.
+
+
+  \section{Experiments}
+
+  \subsection{Data} Briefly describe the data and its size (number of
+  records and number of features, type of features etc.)
+  \subsection{Experimental Setup} Describe how did you setup your
+  experiments, how the training/testing data was prepared, what performance
+  metrics are you considering, what baseline methods for comparison are you
+  using.
+  \subsection{Experimental Results} Describe your experimental results.
+  Structure your experiments around particular aspects of your method. For
+  example, you could structure the experiment as follows: (1) a table
+  showing results of your method using different types of features; (2)
+  table comparing the performance of your method to the baseline; (3) a
+  graph plotting the size of the training dataset vs. the time it takes to
+  train the model; (4) Investigation of the learned model (what are the
+  important features, etc.).
+
+
+  \section{Conclusion}
+
+
+  \section{Contributions}
+
+  \input{josh_contributions}
+  \input{michel_contributions}
+
+
+\end{document}
