@@ -3,3 +3,6 @@
 *.swp
 /data
 /literature.accents
+*.aux
+*.log
+*.out
