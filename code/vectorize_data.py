@@ -162,8 +162,8 @@ def read_posts( in_file, config ):
     """
 
     # Read in necessary config values.
-    protocol  = config.get("input", "in_protocol")
-    sample = config.getint("tfidf", "sample_size")
+    protocol       = config.get("input", "in_protocol")
+    sample_size = config.getint("tfidf", "sample_size")
 
     f = None # empty file handle
 
@@ -205,7 +205,7 @@ def read_posts( in_file, config ):
         # Only read in at most sample data points. We assume that the posts
         # are in no particularly relevant order, so this simulates uniform
         # random sampling.
-        if sample > 0 and len( posts ) >= sample:
+        if sample_size > 0 and len( posts ) >= sample_size:
             break
 
     return posts
