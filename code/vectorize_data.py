@@ -1,6 +1,7 @@
 """
 Author: Michel Rouly
-Date:   2014-04-28
+Date:   2014-05-07
+Desc:   Read in an input directory of files and vectorize them into memory.
 """
 
 

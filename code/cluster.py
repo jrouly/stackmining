@@ -1,7 +1,9 @@
 """
 Author: Michel Rouly
 Author: Joshua Wells
-Date:   2014-04-28
+Date:   2014-05-07
+Desc:   Perform a clustering procedure on the input data set and output
+        formatted metrics.
 """
 
 import sys
