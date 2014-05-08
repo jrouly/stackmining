@@ -1,0 +1,10 @@
+INFO:   Number of entries:    106908.
+INFO:   Number of features:   10728.
+INFO:   Number of categories: 108.
+INFO: Beginning DBSCAN clustering.
+INFO:   |-        Execution time: 2835.578487s
+INFO:   |-           Homogeneity: 1.000
+INFO:   |-          Completeness: 0.404
+INFO:   |-             V-measure: 0.576
+INFO:   |-   Adjusted Rand-Index: 0.000
+INFO:   |-  Adjusted Mutual Info: -0.038

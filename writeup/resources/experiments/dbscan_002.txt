@@ -1,0 +1,12 @@
+INFO: Vectorizing dataset.
+INFO: Data vectorized.
+INFO:   Number of entries:    10800.
+INFO:   Number of features:   1918.
+INFO:   Number of categories: 108.
+INFO: Beginning DBSCAN clustering.
+INFO:   |-        Execution time: 35.074878s
+INFO:   |-           Homogeneity: 0.999
+INFO:   |-          Completeness: 0.504
+INFO:   |-             V-measure: 0.670
+INFO:   |-   Adjusted Rand-Index: 0.000
+INFO:   |-  Adjusted Mutual Info: 0.001
