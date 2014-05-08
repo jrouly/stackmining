@@ -140,9 +140,9 @@ def vectorize_data( config ):
     vectorized_posts = tfidf_vectorizer.fit_transform( posts )
 
     logging.info("Data vectorized.")
-    logging.debug("Number of entries:    %d." % vectorized_posts.shape[0])
-    logging.debug("Number of features:   %d." % vectorized_posts.shape[1])
-    logging.debug("Number of categories: %d." % len( set( labels ) ) )
+    logging.info("  Number of entries:    %d." % vectorized_posts.shape[0])
+    logging.info("  Number of features:   %d." % vectorized_posts.shape[1])
+    logging.info("  Number of categories: %d." % len( set( labels ) ) )
 
 
     return (labels, vectorized_posts)
