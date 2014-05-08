@@ -8,6 +8,8 @@
 *.out
 *.pdf
 *.ini
+*.bbl
+*.blg
 writeup/josh_contributions.tex
 writeup/michel_contributions.tex
 .~*
