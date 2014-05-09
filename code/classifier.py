@@ -23,7 +23,7 @@ from vectorize_data import vectorize_data
 
 
 
-# Run clustering algorithm {{{
+# Run classifying algorithm {{{
 def run_classification( classifier, data, labels ):
 
     X_train, X_test, y_train, y_test = cross_validation.train_test_split(
@@ -68,10 +68,10 @@ def do_dtree( data, labels, config ):
     run_classification( dt, data, labels )
 # }}}
 
+
+
 # Perform RandomForest {{{
 def do_randomForest( data, labels, config ):
-
-    max_depth = config.getint("dtree", "max_depth")
 
     rf = ensemble.RandomForestClassifier()
 
@@ -79,6 +79,8 @@ def do_randomForest( data, labels, config ):
     data = data.toarray()
     run_classification( rf, data, labels )
 # }}}
+
+
 
 # Perform naiveBayes {{{
 def do_naiveBayes( data, labels, config ):
@@ -89,6 +91,8 @@ def do_naiveBayes( data, labels, config ):
     data = data.toarray()
     run_classification( nb, data, labels )
 # }}}
+
+
 
 # Perform k-nearest neighbor {{{
 def do_kNeighbor( data, labels, config ):
@@ -103,6 +107,8 @@ def do_kNeighbor( data, labels, config ):
     run_classification( kn, data, labels )
 # }}}
 
+
+
 # Perform svm {{{
 def do_svm( data, labels, config ):
 
@@ -116,6 +122,7 @@ def do_svm( data, labels, config ):
     data = data.toarray()
     run_classification( sv, data, labels )
 # }}}
+
 
 
 # Executable (Main) {{{
@@ -171,8 +178,4 @@ if __name__ == "__main__":
 
         if algorithm == "svm":
             do_svm( data, labels, config )
-
-
-
-
 # }}}
