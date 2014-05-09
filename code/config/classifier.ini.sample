@@ -16,3 +16,10 @@ min_df=
 
 ; The maximum depth of the tree.
 max_depth=
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+[knn]
+
+; The maximum depth of the tree.
+n_neighbors=

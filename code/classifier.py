@@ -61,6 +61,7 @@ def do_dtree( data, labels, config ):
     max_depth = config.getint("dtree", "max_depth")
 
     dt = tree.DecisionTreeClassifier(
+        max_depth=max_depth
     )
 
     logging.info("Beginning Decision Tree classification.")
@@ -82,7 +83,7 @@ def do_randomForest( data, labels, config ):
 
 
 
-# Perform naiveBayes {{{
+# Perform NaiveBayes {{{
 def do_naiveBayes( data, labels, config ):
 
     nb = naive_bayes.GaussianNB()
@@ -97,10 +98,11 @@ def do_naiveBayes( data, labels, config ):
 # Perform k-nearest neighbor {{{
 def do_kNeighbor( data, labels, config ):
 
-    #Possible useful args:
-    #n_neighbor=int
-    #weights='uniform'|'distance'
-    kn = neighbors.KNeighborsClassifier()
+    n_neighbors = config.getint("dtree", "max_depth")
+
+    kn = neighbors.KNeighborsClassifier(
+        n_neighbors=n_neighbors
+    )
 
     logging.info("Beginning K-Nearest Neighbor classification.")
     data = data.toarray()
@@ -112,10 +114,6 @@ def do_kNeighbor( data, labels, config ):
 # Perform svm {{{
 def do_svm( data, labels, config ):
 
-    #Possible useful args:
-    #class_weight: {dict}
-    #C
-    #http://scikit-learn.org/stable/modules/generated/sklearn.svm.LinearSVC.html#sklearn.svm.LinearSVC
     sv = svm.LinearSVC()
 
     logging.info("Beginning SVM classification.")
