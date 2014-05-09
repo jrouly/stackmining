@@ -14,6 +14,10 @@ from time import time
 from sklearn import metrics
 from sklearn import tree
 from sklearn import cross_validation
+from sklearn import naive_bayes
+from sklearn import svm
+from sklearn import neighbors
+from sklearn import ensemble
 
 from vectorize_data import vectorize_data
 
@@ -64,6 +68,27 @@ def do_dtree( data, labels, config ):
     run_classification( dt, data, labels )
 # }}}
 
+# Perform RandomForest {{{
+def do_randomForest( data, labels, config ):
+
+    max_depth = config.getint("dtree", "max_depth")
+
+    rf = ensemble.RandomForestClassifier()
+
+    logging.info("Beginning Random Forest classification.")
+    data = data.toarray()
+    run_classification( rf, data, labels )
+# }}}
+
+# Perform naiveBayes {{{
+def do_naiveBayes( data, labels, config ):
+
+    nb = naive_bayes.GaussianNB()
+
+    logging.info("Beginning NaiveBayes classification.")
+    data = data.toarray()
+    run_classification( nb, data, labels )
+# }}}
 
 
 # Executable (Main) {{{
@@ -74,7 +99,7 @@ if __name__ == "__main__":
                     format='%(levelname)s: %(message)s')
 
     # algorithm options
-    algorithm_options = "dtree"
+    algorithm_options = "dtree|randomforest|nbayes"
 
     # ensure we have at least the minimum required params
     if len( sys.argv ) < 4:
@@ -93,7 +118,7 @@ if __name__ == "__main__":
     config.readfp( open( config_file ) )
 
     # available algorithms
-    known_algorithms = ["dtree"]
+    known_algorithms = ["dtree","randomforest","nbayes"]
 
     # read and vectorize the data
     (labels, data) = vectorize_data( config )
@@ -107,4 +132,13 @@ if __name__ == "__main__":
 
         if algorithm == "dtree":
             do_dtree( data, labels, config )
+
+        if algorithm == "randomforest":
+            do_randomForest( data, labels, config )
+
+        if algorithm == "nbayes":
+            do_naiveBayes( data, labels, config )
+
+
+
 # }}}
