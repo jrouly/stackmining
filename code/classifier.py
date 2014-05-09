@@ -90,6 +90,33 @@ def do_naiveBayes( data, labels, config ):
     run_classification( nb, data, labels )
 # }}}
 
+# Perform k-nearest neighbor {{{
+def do_kNeighbor( data, labels, config ):
+
+    #Possible useful args:
+    #n_neighbor=int
+    #weights='uniform'|'distance'
+    kn = neighbors.KNeighborsClassifier()
+
+    logging.info("Beginning K-Nearest Neighbor classification.")
+    data = data.toarray()
+    run_classification( kn, data, labels )
+# }}}
+
+# Perform svm {{{
+def do_svm( data, labels, config ):
+
+    #Possible useful args:
+    #class_weight: {dict}
+    #C
+    #http://scikit-learn.org/stable/modules/generated/sklearn.svm.LinearSVC.html#sklearn.svm.LinearSVC
+    sv = svm.LinearSVC()
+
+    logging.info("Beginning SVM classification.")
+    data = data.toarray()
+    run_classification( sv, data, labels )
+# }}}
+
 
 # Executable (Main) {{{
 if __name__ == "__main__":
@@ -99,7 +126,7 @@ if __name__ == "__main__":
                     format='%(levelname)s: %(message)s')
 
     # algorithm options
-    algorithm_options = "dtree|randomforest|nbayes"
+    algorithm_options = "dtree|randomforest|nbayes|kNeighbor|svm"
 
     # ensure we have at least the minimum required params
     if len( sys.argv ) < 4:
@@ -118,7 +145,7 @@ if __name__ == "__main__":
     config.readfp( open( config_file ) )
 
     # available algorithms
-    known_algorithms = ["dtree","randomforest","nbayes"]
+    known_algorithms = ["dtree","randomforest","nbayes","kNeighbor","svm"]
 
     # read and vectorize the data
     (labels, data) = vectorize_data( config )
@@ -138,6 +165,13 @@ if __name__ == "__main__":
 
         if algorithm == "nbayes":
             do_naiveBayes( data, labels, config )
+
+        if algorithm == "kNeighbor":
+            do_kNeighbor( data, labels, config )
+
+        if algorithm == "svm":
+            do_svm( data, labels, config )
+
 
 
 
