@@ -77,7 +77,7 @@ def vectorize_data( config ):
         num_posts = len( post_data )
         labels.extend( [category] * num_posts )
 
-        logging.debug("Read %d posts." % num_posts)
+        logging.debug("Read %d posts from %s." % (num_posts, category) )
 
     # }}}
 
@@ -192,10 +192,13 @@ def read_posts( in_file, config ):
 
         # Strip out html
 
-        body = document_fromstring( body )
-        body = body.text_content()
-        body = body.encode("ascii", "ignore")
-        body = body.strip()
+        try:
+            body = document_fromstring( body )
+            body = body.text_content()
+            body = body.encode("ascii", "ignore")
+            body = body.strip()
+        except:
+            continue
 
         # Strip out empty posts after processing
         if len( body ) == 0:
