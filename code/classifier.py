@@ -54,6 +54,8 @@ def run_classification( classifier, data, labels ):
 # Perform DTree {{{
 def do_dtree( data, labels, config ):
 
+    max_depth = config.getint("dtree", "max_depth")
+
     dt = tree.DecisionTreeClassifier(
     )
 
@@ -61,6 +63,7 @@ def do_dtree( data, labels, config ):
     data = data.toarray()
     run_classification( dt, data, labels )
 # }}}
+
 
 
 # Executable (Main) {{{
