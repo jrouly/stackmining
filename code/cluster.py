@@ -62,7 +62,7 @@ def do_kmeans( data, labels, config ):
     expected to be a dictionary of categories to tf-idf vectors.
     """
 
-    init          = config.get("kmeans", "init")
+    init       = config.get("kmeans", "init")
     n_init     = config.getint("kmeans", "n_init")
     init_size  = config.getint("kmeans", "init_size")
     batch_size = config.getint("kmeans", "batch_size")
@@ -91,9 +91,9 @@ def do_affinity_propagation( data, labels, config ):
     tf-idf vectors.
     """
 
-    damping        = config.getfloat("ap", "damping")
+    damping          = config.getfloat("ap", "damping")
     convergence_iter = config.getint("ap", "convergence_iter")
-    affinity            = config.get("ap", "affinity")
+    affinity         = config.get("ap", "affinity")
 
     ap = cluster.AffinityPropagation(
         damping=damping,                   # damping factor
@@ -177,7 +177,7 @@ def do_dbscan( data, labels, config ):
     Input is expected to be a dictionary of categories to tf-idf vectors.
     """
 
-    eps       = config.getfloat("dbscan", "eps")
+    eps         = config.getfloat("dbscan", "eps")
     min_samples = config.getint("dbscan", "min_samples")
 
     db = cluster.DBSCAN(

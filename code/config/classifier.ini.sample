@@ -1,0 +1,18 @@
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+[tfidf]
+
+; number of posts to sample from the file
+sample_size=
+
+; terms must occur in under max_df documents, use a percentage (decimal)
+max_df=
+
+; terms must occur in at least min_df documents, use a number (integer)
+min_df=
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+[dtree]
+
+; The maximum depth of the tree.
+max_depth=
