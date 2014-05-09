@@ -98,7 +98,7 @@ def do_naiveBayes( data, labels, config ):
 # Perform k-nearest neighbor {{{
 def do_kNeighbor( data, labels, config ):
 
-    n_neighbors = config.getint("dtree", "max_depth")
+    n_neighbors = config.getint("knn", "n_neighbors")
 
     kn = neighbors.KNeighborsClassifier(
         n_neighbors=n_neighbors
