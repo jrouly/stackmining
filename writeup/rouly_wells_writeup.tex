@@ -1,6 +1,6 @@
 \documentclass[letterpaper,10pt]{article}
 
-\usepackage[fleqn]{amsmath}
+\usepackage{amsmath}
 \usepackage{amstext}
 \usepackage{dcolumn}
 \usepackage{courier}
@@ -22,7 +22,7 @@
 \DeclareMathSymbol{\mlq}{\mathord}{operators}{``}
 \DeclareMathSymbol{\mrq}{\mathord}{operators}{`'}
 
-% Syntax highliting
+% Syntax highlighting
 \lstset{
     language=Python,
     basicstyle=\ttfamily\small,
@@ -64,7 +64,7 @@
 \maketitle
 
 
-% 1. Problem Description {{{
+% 1. Problem Description (Done) {{{
 \section{Problem Description}
 
 Textual data is everywhere on the Internet today. This written language
@@ -89,27 +89,28 @@ when the labels of a subset of training data are known beforehand.
 
 The goal of this project is to apply a variety of data mining techniques,
 specifically clustering and classifying algorithms, to a large dataset of
-textual, natural-language data. The dataset used is the archived
-collection of posts from
-StackExchange.\footnote{\url{http://stackexchange.com}} Several different
-algorithms will be applied and their performance compared on this
-prototypical Internet sourced textual dataset. A secondary goal of this
-investigation is to showcase some of the features of the Python machine
-learning library
+textual, natural-language data. The dataset used is the archived collection
+of posts from StackExchange.\footnote{\url{http://stackexchange.com}}
+Several different algorithms will be applied to determine which
+StackExchange site an unseen Post belongs to, and their performance
+compared on this prototypical Internet sourced textual dataset. A secondary
+goal of this investigation is to showcase some of the features of the
+Python machine learning library
 \texttt{scikit-learn}.\footnote{\url{http://scikit-learn.org}} After the
-experiments are completed, evaluation metrics will provide insight into
-the algorithmic performance.
+experiments are completed, evaluation metrics will provide insight into the
+algorithmic performance.
 % }}}
 
 
-% 2. Related Work {{{
+% 2. Related Work (Done) {{{
 \section{Related Work}
 
 This work is entirely building upon the efforts of others. The clustering
 and classification algorithms used have been introduced over the years
 since as early as 1963. Their implementations are all provided by the
-\texttt{scikit-learn} library.
+\texttt{scikit-learn}\cite{scikit-learn} library.
 
+% Unsupervised Methods {{{
 \subsection{Unsupervised Methods}
 
 \paragraph{Ward's Hierarchical Clustering} Ward's method\cite{ward1963} is
@@ -130,8 +131,8 @@ of the primary differences is that Mean-Shift uses a kernel function to
 determine the weights of nearby points for mean calculation.
 
 \paragraph{DBSCAN} Density-based spatial clustering of applications with
-noise (DBSCAN)\cite{ester1996} is a density-based clustering algorithm that
-is insensitive to noise. This means that densely populated areas of the
+noise\cite{ester1996} is a density-based clustering algorithm that is
+insensitive to noise. This means that densely populated areas of the
 dataset (\textit{i.e.} areas where a number of data points lie within a set
 similarity threshold) are clustered together.
 
@@ -141,14 +142,15 @@ in a lower dimensionality space, where a secondary clustering process can
 occur. Often (as in \texttt{scikit-learn}) K-Means is used in this final
 step.
 
-\paragraph{Affinity Propagation} Introduced by Frey and Dueck in 2007,
-Affinity Propagation\cite{frey2007} (AP) is one of the more unique
-clustering mechanisms used in this study. AP runs as a message passing
-framework over a similarity matrix of the dataset. Unlike K-Means, AP does
-not require K as an initial input.  Interestingly, AP can be implemented to
-run efficiently on a parallel computing ``cloud''
-architecture.\cite{rose2013}
+\paragraph{Affinity Propagation} Introduced in 2007, Affinity
+Propagation\cite{frey2007} (AP) is one of the more unique clustering
+mechanisms used in this study. AP runs as a message passing framework over
+a similarity matrix of the dataset. Unlike K-Means, AP does not require K
+as an initial input.  Interestingly, AP can be implemented to run
+efficiently on a parallel computing ``cloud'' architecture.\cite{rose2013}
+%}}}
 
+% Supervised Methods {{{
 \subsection{Supervised Methods}
 
 \paragraph{Decision Trees} Decision Trees are an umbrella category of
@@ -180,41 +182,320 @@ through a kernel function transforming the input space into a higher
 dimensional space.
 % }}}
 
+% }}}
 
-% 3. Solution {{{
+
+% 3. Solution (Empty) {{{
 \section{Solution}
 
+{\color{red}
 How did you solve the problem? Describe the technical approach. Tell us
 what method/algorithm did you use, develop or extend and how did you
 implement it.
+}
+
 % }}}
 
 
-% 4. Experiments {{{
+% 4. Experiments (Done) {{{
 \section{Experiments}
 
-% 4.1. Data {{{
-\subsection{Data} Briefly describe the data and its size (number of
-records and number of features, type of features etc.)
+
+% 4.1. Data (Done) {{{
+\subsection{Data}
+
+The dataset was 90 GB of archived textual natural-language data from
+StackExchange,\footnote{\url{http://stackexchange.com}} a forum-like
+website with 111 subforums (sites). Each site has a specific topic
+(\textit{e.g.} programming, chess, Italian, \textit{etc.}). Each site
+follows a question-answer format, where the dataset is composed entirely of
+question posts. Data classes correspond to site category, data points
+correspond to individual posts on the sites.
+
+To make the data more manageable, the largest class
+(\texttt{stackoverflow}) and the two smallest classes (\texttt{italian},
+\texttt{ebooks}) were eliminated to help center the size of each class.
+The resulting information was 108 classes (sites) and 5.2 GB of textual
+information. After these initial steps, but before random sampling, the raw
+data included 4,421,754 entries, and many millions of features (the entire
+feature space was never measured).
 % }}}
 
-% 4.2. Experimental Setup {{{
-\subsection{Experimental Setup} Describe how did you setup your
-experiments, how the training/testing data was prepared, what performance
-metrics are you considering, what baseline methods for comparison are you
-using.
+
+% 4.2. Experimental Setup (Done) {{{
+\subsection{Experimental Setup}
+
+To preprocess the data, we developed a configurable Python framework to
+stream in data from an outside location (\texttt{disk}: on a local or
+networked block storage device; or \texttt{s3}: from a remote Amazon S3
+bucket) and parse a random sample (without replacement) into memory.
+Streaming from Amazon S3 used the
+\texttt{Boto}\footnote{\url{https://github.com/boto/boto}} library.
+
+Each site's \texttt{Posts.xml} was parsed iteratively using
+\texttt{lxml}\footnote{\url{http://lxml.de}} to interpret the XML
+structure. Rows (posts) were randomly sampled at a user-specified count
+from this file. Selected posts were stripped of any HTML elements using
+\texttt{lxml}, non-ASCII characters, and empty strings.
+
+Once the entire dataset is read into memory, \texttt{scikit-learn} is used
+to perform TF-IDF vectorization. Different values of \texttt{max\_df} and
+\texttt{min\_df} were tried out to minimize the feature set while still
+retaining enough useful, identifying attributes. We settled on three
+different subsets of the data: ``small,'' ``medium,'' and ``large.'' See
+Table \ref{tbl:tfidf} for details.
+
+
+\begin{table}[ht]
+\center
+\begin{tabular}{cccccc}
+Label & Sample Size & Data Points & Dimensionality & \texttt{max\_df} &
+\texttt{min\_df} \\
+\hline
+Small & 100 & 10,800 & 5,904 & 90\% & 10 \\
+Medium & 500 & 53,908 & 11,319 & 80\% & 20 \\
+Large & 1000 & 106,908 & 11,416 & 75\% & 40 \\
+\hline
+\end{tabular}
+\caption{Sampled Dataset Detail}
+\label{tbl:tfidf}
+\end{table}
+
+
+\noindent
+Note that random sampling and re-vectorization occurs every time the
+framework executes so as to prevent repetition over the same sample.
+Multiple analytics can be chained together over a single execution, though.
+
+We ran these datasets through several algorithms provided by
+\texttt{scikit-learn}. Initially, we used K-means, DB-scan, Affinity
+Propagation, Spectral Clustering, and Ward's Method (hierarchical
+clustering). In order to operate on such a large dataset we provisioned an
+Amazon EC2 cluster (\texttt{r3.4xlarge}, see Table \ref{tbl:ec2} for
+details). The EC2 cluster ran an initial provisioning script to setup the
+environment, stream in data from S3, and compile dependencies. The EC2
+cluster was used to run all experiments and metrics.
+
+
+\begin{table}[ht]
+\center
+\begin{tabular}{cc}
+\multicolumn{2}{c}{\texttt{r3.4xlarge}} \\
+\hline
+RAM & 122 GB \\
+Disk & 1x320 SSD \\
+Cores & 16 \\
+ECU & 52 \\
+\hline
+\end{tabular}
+\caption{Amazon EC2 Detail}
+\label{tbl:ec2}
+\end{table}
+
+
+For each experiment, runtime of the algorithm and performance metrics were
+recorded. For clustering algorithms, this meant V-measure, homogeneity, and
+completeness.  V-measure was selected as the representative statistic of
+clustering performance because it combined the two subsidiary metrics (see
+Eq.  \ref{eq:vmeasure}). All three metrics require ground-truth knowledge,
+and V-measure can be (very) roughly approximated as accuracy in order to
+compare clustering performance with classification performance, which is
+implemented next.
+
+
+\begin{align}
+h = 1 - \frac{H(C|K)}{H(C)}\quad;\quad
+c = 1 - \frac{H(K|C)}{H(K)}\quad;\quad
+v = 2 \cdot \frac{h \cdot c}{h + c}
+\label{eq:vmeasure}
+\end{align}
+
+
+Once results for clustering algorithms were obtained, we added
+classification tools to the machine learning framework developed so far.
+With \texttt{scikit-learn} we provided Decision Trees, Random Forests,
+Naive Bayesian classification, Support Vector Machines, and K Nearest
+Neighbor classification. Each run, input data was split into 60\% training
+data and 40\% testing data.
+
+
+Many of the machine learning functions required input parameter tuning from
+the user. K-Means, Spectral clustering, and Ward's Method were all seeded
+with the true number of classes as the target number of clusters. Damping
+for Affinity Propagation was set to 0.5 to accelerate convergence. DBSCAN
+was initialized with $\epsilon=0.01$ and \texttt{min\_samples}$=1$. We
+believe that this resulted in garbage output for DBSCAN, but no other
+initialization values allowed the algorithm to cluster. Decision Trees
+consumed the most resources but performed the best when initialized with
+default settings; attempts to trim the depth of the tree only decreased
+performance. A range of different $K$ values were sampled for KNN, but the
+default value of 5 provided the best results, despite massively slow
+runtime. Finally, we left SVM with a linear kernel for the sake of
+simplicity.
 % }}}
 
-% 4.3. Experimental Results {{{
-\subsection{Experimental Results} Describe your experimental results.
-Structure your experiments around particular aspects of your method. For
-example, you could structure the experiment as follows: (1) a table
-showing results of your method using different types of features; (2)
-table comparing the performance of your method to the baseline; (3) a
-graph plotting the size of the training dataset vs. the time it takes to
-train the model; (4) Investigation of the learned model (what are the
-important features, etc.). \cite{santos2009}
+
+% 4.3. Experimental Results (Done) {{{
+\subsection{Experimental Results}
+
+% Clustering {{{
+\subsubsection{Clustering}
+
+The most readily scalable algorithm was K-Means. DBSCAN was slower than
+K-Means on every size dataset, but was still able to handle even the large
+data set. Affinity Propagation, Spectral Clustering, and Ward's Method all
+took enormous amounts of time for even the small dataset and ended up not
+being able to handle the larger datasets at all within a reasonable amount
+of time (or else faced data structure overflow).
+
+It is important to also consider how well the clustering algorithms assign
+posts to clusters. Considering V-measure, the worst performer was Affinity
+Propagation, achieving only 0.15. Part of the reason why Affinity
+Propagation might be bad for this type of data is that there is no inherent
+graph or network structure to the data Considering the poor
+resulting predictions compared to the other methods and the problem with
+scaling, it seems like this is not the ideal clustering technique for
+trivially processed textual data. Perhaps with a better fit similarity
+metric, or with better preprocessing techniques (specifically stemming and
+lexical analysis) Affinity Propagation might perform better.
+
+The next worst performer is K-Means. K-Means' V-measure values dropped
+significantly as the dataset got larger, from slightly over 0.36
+for the smallest data set to under 0.3 for the largest set. Part of the
+issue might be that the larger sets are more likely to be caught in local
+minima. Additionally, the larger datasets contained significantly more
+features so the curse of dimensionality could be another issue. Thus, it
+might be best to reduce the features through a dimensionality reduction
+technique like PCA or similar. Regardless, K-Means is the best performer
+in terms of run time, and scales the most rapidly to large data sets.
+
+Both Spectral clustering and Ward's Method obtained similar V-measures
+(almost 0.4 for the small dataset) and took significantly longer to produce
+results than K-Means or DBSCAN. Both of these methods might be valuable on
+far smaller data sets, but neither scale well to big data.
+
+Finally, DBSCAN produced, by far, the most high quality results. It
+achieved a V-measure of about 0.6 with little variance on the different
+sizes of datasets. While it did take far longer than K-means to execute, it
+was still able to handle the largest dataset. Part of the reason it might
+perform so well is that it can detect differently sized clusters and
+doesn't make assumptions about cluster shape. On the other hand, the high
+V-measure values may also indicate overfitting to the data (which is highly
+possible given that it was initialized with $\epsilon=0.01$). See Table
+\ref{tbl:clustering} for a complete record of results.
+
+
+\begin{table}[ht]
+\center
+\begin{tabular}{cccccc}
+Dataset & Algorithm & Runtime & \textbf{V} & \textbf{H} & \textbf{C} \\
+\hline
+\multicolumn{1}{c}{\multirow{6}{*}{Small}}
+      & DBSCAN & 57.90 s & 0.60 & 1.00 & 0.43 \\
+      & Spectral & 1334.91 s & 0.39 & 0.39 & 0.39 \\
+      & Ward's & 1613.21 s & 0.39 & 0.34 & 0.46 \\
+      & K-Means & 10.68 s & 0.38 & 0.36 & 0.40 \\
+      & AP & 558.10 s & 0.16 & 0.15 & 0.17 \\
+      & Mean-Shift & -- & -- & -- & -- \\
+\hline
+\multicolumn{1}{c}{\multirow{2}{*}{Medium}}
+      & DBSCAN & 1088.72 s & 0.601 & 1.00 & 0.43 \\
+      & K-Means & 30.92 s & 0.35 & 0.35 & 0.32 \\
+\hline
+\multicolumn{1}{c}{\multirow{2}{*}{Large}}
+      & DBSCAN & 2835.58 s & 0.576 & 1.00 & 0.40 \\
+      & K-Means & 40.84 s & 0.29 & 0.28 & 0.32 \\
+\hline
+\end{tabular}
+\caption{Clustering Results}
+\label{tbl:clustering}
+\end{table}
 % }}}
+
+
+% Classification {{{
+\subsubsection{Classification}
+
+The worst performing classifier by far was K-Nearest Neighbors. Since it
+uses the training data for predicting, it could not scale up to the larger
+sets.  Additionally, the predicting results were horrible at less than 10\%
+accuracy, even when a number of different K values were tried. Overall,
+this is probably a bad classifier for the problem due to the fact the
+feature space is so large, and that there might be quite a few neighbors in
+different classes. It is possible that the results would improve by
+weighting the nearest points instead of using uniform weights.
+
+Decision Trees proved interesting to work with. It seems that
+\texttt{scikit-learn} does not provide for pruning in the basic Decision
+Tree implementation, but still offer a few options to play around with,
+namely the \texttt{max\_depth} of the tree. We tried a number of values
+from $[5, 20]$ but the results were rather disappointing, at less than 20\%
+accuracy. Using the default depth value causes the tree to split until it
+either reaches a pure node or hits a certain minimum number of values. This
+proved highly successful, with almost 30\% accuracy in the smallest set and
+over 40\% in the medium dataset. The reason why the results probably
+improved is that it could pick out more specific cases since the larger
+datasets have a larger dimensionality. Since many of the StackExchange
+sites have specialized topics and terminology, this Decision Tree structure
+must do a good job at identifying these features. Consequently, though, it
+probably suffers from overfitting to the data. Also, the runtime ended up
+taking significantly longer than any of the other algorithms.
+
+A similar algorithm to Decision Trees is the Random Forest ensemble method.
+Since the default parameters worked well for vanilla Decision Trees, we
+decided to let Random Forest classification initialize with default values
+as well. The results were significantly improved over Decision Trees, with
+accuracy of 46\% on the small dataset and up to 51\% on the largest. Part
+of the reason why the results were improved is that the Random Forest helps
+to combat overfitting as an ensemble method. A few individual trees might
+overfit for some cases (increasing bias), but the majority would more
+likely not (decreasing variance through averaging results). Perhaps
+surprising is that the algorithm executed more quickly than the vanilla
+Decision Tree. However, it was still the second longest to construct out
+of all the classifiers.
+
+Support Vector Machines correctly predicted classes, even with default
+initialization settings and a linear kernel, the most effectively of all
+attempted methods. It was able to achieve accuracy close to 70\% for all
+three data sets. Additionally, its execution time was among the fastest.
+Its high quality performance indicates that the data must be relatively
+easily linearly separable. Some of the other kernel functions might produce
+even better results, but we did not investigate them. See Table
+\ref{tbl:classification} for a complete record of results.
+
+
+\begin{table}[ht]
+\center
+\begin{tabular}{cccccc}
+Dataset & Algorithm & Runtime & Accuracy & Precision & Recall \\
+\hline
+\multicolumn{1}{c}{\multirow{5}{*}{Small}}
+      & SVM & 1.42 s & 0.69 & 0.70 & 0.69 \\
+      & Random Forests & 12.96 s & 0.46 & 0.50 & 0.46 \\
+      & Naive Bayesian & 0.75 s & 0.51 & 0.57 & 0.51 \\
+      & Decision Trees & 124.91 s & 0.29 & 0.31 & 0.29 \\
+      & KNN & 1.50 s & 0.04 & 0.48 & 0.04 \\
+\hline
+\multicolumn{1}{c}{\multirow{4}{*}{Medium}}
+      & SVM & 17.13 s & 0.72 & 0.72 & 0.72 \\
+      & Random Forests & 155.99 s  & 0.50 & 0.52 & 0.50 \\
+      & Naive Bayesian & 7.28 s    & 0.49 & 0.51 & 0.49 \\
+      & Decision Trees & 1924.73 s & 0.41 & 0.42 & 0.41 \\
+\hline
+\multicolumn{1}{c}{\multirow{3}{*}{Large}}
+      & SVM & 28.61 s & 0.71 & 0.71 & 0.71 \\
+      & Random Forests & 329.01 s & 0.51 & 0.52 & 0.51 \\
+      & Naive Bayesian & 14.93 s  & 0.44 & 0.46 & 0.43 \\
+\hline
+\end{tabular}
+\caption{Classification Results}
+\label{tbl:classification}
+\end{table}
+% }}}
+
+
+% }}}
+
 
 % }}}
 
