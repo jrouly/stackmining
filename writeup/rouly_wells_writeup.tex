@@ -1,4 +1,4 @@
-\documentclass[letterpaper,12pt]{article}
+\documentclass[letterpaper,10pt]{article}
 
 \usepackage[fleqn]{amsmath}
 \usepackage{amstext}
@@ -65,109 +65,180 @@
 
 
 % 1. Problem Description {{{
-  \section{Problem Description}
+\section{Problem Description}
 
-  Textual data is everywhere on the Internet today. This written language
-  data comes in a wide variety of differing sizes, structures, reading
-  levels, languages, and character sets. Identifying patterns and
-  sub-structure in a large, unknown data space like this is a formidable
-  problem. And yet, because of textual data's ubiquity and value, it is one
-  of the most important problems to solve efficiently and effectively. Data
-  mining tools based on machine learning techniques provide a possible
-  solution to this problem.
+Textual data is everywhere on the Internet today. This written language
+data comes in a wide variety of differing sizes, structures, reading
+levels, languages, and character sets. Identifying patterns and
+sub-structure in a large, unknown data space like this is a formidable
+problem. And yet, because of textual data's ubiquity and value, it is one
+of the most important problems to solve efficiently and effectively. Data
+mining tools based on machine learning techniques provide a possible
+solution to this problem.
 
-  Because of the unknown nature of large, Internet sourced textual
-  datasets, the most readily applicable algorithms for data investigation
-  are ``unsupervised'' clustering algorithms. These algorithms are
-  considered unsupervised because, generally, no initial knowledge about
-  the dataset is required. Thus they serve as excellent tools to perform
-  preliminary investigation on an unknown dataset. However, given knowledge
-  about the dataset (\textit{e.g.} a ground-truth set of labels over the
-  data) other algorithms become relevant. There are a variety of powerful
-  classification algorithms which can be applied to large textual data sets
-  when the labels of a subset of training data are known beforehand.
+Because of the unknown nature of large, Internet sourced textual
+datasets, the most readily applicable algorithms for data investigation
+are ``unsupervised'' clustering algorithms. These algorithms are
+considered unsupervised because, generally, no initial knowledge about
+the dataset is required. Thus they serve as excellent tools to perform
+preliminary investigation on an unknown dataset. However, given knowledge
+about the dataset (\textit{e.g.} a ground-truth set of labels over the
+data) other algorithms become relevant. There are a variety of powerful
+classification algorithms which can be applied to large textual data sets
+when the labels of a subset of training data are known beforehand.
 
-  The goal of this project is to apply a variety of data mining techniques,
-  specifically clustering and classifying algorithms, to a large dataset of
-  textual, natural-language data. The dataset used is the archived
-  collection of posts from
-  StackExchange.\footnote{\url{http://stackexchange.com}} Several different
-  algorithms will be applied and their performance compared on this
-  prototypical Internet sourced textual dataset. A secondary goal of this
-  investigation is to showcase some of the features of the Python machine
-  learning library
-  \texttt{scikit-learn}.\footnote{\url{http://scikit-learn.org}} After the
-  experiments are completed, evaluation metrics will provide insight into
-  the algorithmic performance.
+The goal of this project is to apply a variety of data mining techniques,
+specifically clustering and classifying algorithms, to a large dataset of
+textual, natural-language data. The dataset used is the archived
+collection of posts from
+StackExchange.\footnote{\url{http://stackexchange.com}} Several different
+algorithms will be applied and their performance compared on this
+prototypical Internet sourced textual dataset. A secondary goal of this
+investigation is to showcase some of the features of the Python machine
+learning library
+\texttt{scikit-learn}.\footnote{\url{http://scikit-learn.org}} After the
+experiments are completed, evaluation metrics will provide insight into
+the algorithmic performance.
 % }}}
 
 
 % 2. Related Work {{{
-  \section{Related Work}
+\section{Related Work}
 
-  This work is entirely building upon the efforts of others.
-  K-Means\cite{macqueen1967} has been one of the most commonly used
+This work is entirely building upon the efforts of others. The clustering
+and classification algorithms used have been introduced over the years
+since as early as 1963. Their implementations are all provided by the
+\texttt{scikit-learn} library.
+
+\subsection{Unsupervised Methods}
+
+\paragraph{Ward's Hierarchical Clustering} Ward's method\cite{ward1963} is
+an early example of a hierarchical clustering process. The algorithm
+operates by minimizing the per-cluster variance (sum of squared difference)
+at each level. It can be efficiently scaled at the cost of more extensive
+preprocessing.
+
+\paragraph{K-Means} K-Means\cite{macqueen1967} has been one of the most
+commonly used clustering algorithms since its introduction in 1967. It
+operates by iteratively updating cluster prototypes as the computed means
+of cluster members. K-Means clustering seeks to minimize the per-cluster
+sum of squared error.
+
+\paragraph{Mean-Shift} The Mean-Shift\cite{fukunaga1975} algorithm,
+introduced in the mid 1970s, operates in a similar fashion to K-Means. One
+of the primary differences is that Mean-Shift uses a kernel function to
+determine the weights of nearby points for mean calculation.
+
+\paragraph{DBSCAN} Density-based spatial clustering of applications with
+noise (DBSCAN)\cite{ester1996} is a density-based clustering algorithm that
+is insensitive to noise. This means that densely populated areas of the
+dataset (\textit{i.e.} areas where a number of data points lie within a set
+similarity threshold) are clustered together.
+
+\paragraph{Spectral Clustering} Spectral Clustering\cite{shi1997},
+introduced in 1997, begins by embedding the affinity matrix of the dataset
+in a lower dimensionality space, where a secondary clustering process can
+occur. Often (as in \texttt{scikit-learn}) K-Means is used in this final
+step.
+
+\paragraph{Affinity Propagation} Introduced by Frey and Dueck in 2007,
+Affinity Propagation\cite{frey2007} (AP) is one of the more unique
+clustering mechanisms used in this study. AP runs as a message passing
+framework over a similarity matrix of the dataset. Unlike K-Means, AP does
+not require K as an initial input.  Interestingly, AP can be implemented to
+run efficiently on a parallel computing ``cloud''
+architecture.\cite{rose2013}
+
+\subsection{Supervised Methods}
+
+\paragraph{Decision Trees} Decision Trees are an umbrella category of
+various supervised learning methods. The algorithms operate by analyzing
+the input dataset attributes for common characteristics and constructing a
+tree of paths to predict the label of a novel input.
+
+\paragraph{Random Forest} Random Forests\cite{breiman2001} are an ensemble
+method combining multiple decision tree classifiers built from different
+random samples of data. In the \texttt{scikit-learn} implementation,
+predictions from the ensemble are averaged instead of tallied as votes.
+
+
+\paragraph{Naive Bayes} Relying on Bayes' Law, Naive Bayesian
+classification is a statistical learning method based on the assumption
+that features occur independently. As a statistical method, Naive Bayesian
+classification performs comparatively well on unknown data sets.
+
+\paragraph{K Nearest Neighbors} K-Nearest Neighbors operates by analyzing
+the neighborhoods of data nodes, building clusters based on the number of
+neighbors surrounding. Because K neighbors are selected, the algorithm is
+highly sensitive to user input tuning.
+
+\paragraph{Support Vector Machines} Support Vector Machines
+(SVM)\cite{vapnik1995} are a supervised learning tool used to find the
+optimal decision boundary (hyperplane), as defined by the largest margin
+hyperplane with the lowest error. This boundary is found by operations
+through a kernel function transforming the input space into a higher
+dimensional space.
 % }}}
 
 
 % 3. Solution {{{
-  \section{Solution}
+\section{Solution}
 
-  How did you solve the problem? Describe the technical approach. Tell us
-  what method/algorithm did you use, develop or extend and how did you
-  implement it.
+How did you solve the problem? Describe the technical approach. Tell us
+what method/algorithm did you use, develop or extend and how did you
+implement it.
 % }}}
 
 
 % 4. Experiments {{{
-  \section{Experiments}
+\section{Experiments}
 
 % 4.1. Data {{{
-  \subsection{Data} Briefly describe the data and its size (number of
-  records and number of features, type of features etc.)
+\subsection{Data} Briefly describe the data and its size (number of
+records and number of features, type of features etc.)
 % }}}
 
 % 4.2. Experimental Setup {{{
-  \subsection{Experimental Setup} Describe how did you setup your
-  experiments, how the training/testing data was prepared, what performance
-  metrics are you considering, what baseline methods for comparison are you
-  using.
+\subsection{Experimental Setup} Describe how did you setup your
+experiments, how the training/testing data was prepared, what performance
+metrics are you considering, what baseline methods for comparison are you
+using.
 % }}}
 
 % 4.3. Experimental Results {{{
-  \subsection{Experimental Results} Describe your experimental results.
-  Structure your experiments around particular aspects of your method. For
-  example, you could structure the experiment as follows: (1) a table
-  showing results of your method using different types of features; (2)
-  table comparing the performance of your method to the baseline; (3) a
-  graph plotting the size of the training dataset vs. the time it takes to
-  train the model; (4) Investigation of the learned model (what are the
-  important features, etc.). \cite{santos2009}
+\subsection{Experimental Results} Describe your experimental results.
+Structure your experiments around particular aspects of your method. For
+example, you could structure the experiment as follows: (1) a table
+showing results of your method using different types of features; (2)
+table comparing the performance of your method to the baseline; (3) a
+graph plotting the size of the training dataset vs. the time it takes to
+train the model; (4) Investigation of the learned model (what are the
+important features, etc.). \cite{santos2009}
 % }}}
 
 % }}}
 
 
 % 5. Conclusions {{{
-  \section{Conclusion}
+\section{Conclusion}
 
 % }}}
 
 
 % 6. Contributions {{{
-  \section{Contributions}
+\section{Contributions}
 
-  \subsection{Joshua's Contributions}
-  \input{josh_contributions}
+\subsection{Joshua's Contributions}
+\input{josh_contributions}
 
-  \subsection{Michel's Contributions}
-  \input{michel_contributions}
+\subsection{Michel's Contributions}
+\input{michel_contributions}
 % }}}
 
 
-  \clearpage
-  \bibliographystyle{acm}
-  \bibliography{rouly_wells_writeup}
+\clearpage
+\bibliographystyle{acm}
+\bibliography{rouly_wells_writeup}
 
 
 \end{document}
