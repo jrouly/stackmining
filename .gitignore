@@ -13,4 +13,5 @@
 *.blg
 writeup/josh_contributions.tex
 writeup/michel_contributions.tex
+writeup/compile.sh
 .~*
