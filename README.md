@@ -45,8 +45,14 @@ Navigate to the code directory
 Initialize the appropriate configuration files
 
     cp config/cluster.ini.sample config/cluster.ini
+    cp config/classifier.ini.sample config/classifier.ini
     cp config/input.ini.sample config/input.ini
 
 Run the clustering script
 
     python cluster.py config/input.ini config/cluster.ini [algorithm]
+
+
+Run the classifier script
+
+    python classifier.py config/input.ini config/classifier.ini [algorithm]
