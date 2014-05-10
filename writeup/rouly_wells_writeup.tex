@@ -500,8 +500,33 @@ Dataset & Algorithm & Runtime & Accuracy & Precision & Recall \\
 % }}}
 
 
-% 5. Conclusions {{{
+% 5. Conclusions (Done) {{{
 \section{Conclusion}
+
+It is clear that every algorithm is not created equal. Some perform well on
+unknown textual datasets, many do not. Unsupervised algorithms like
+K-Means, Affinity Propagation, Spectral Clustering, and Ward's Method
+provide mediocre performance at best. Most supervised algorithms perform
+equally as poorly, with Support Vector Machines as an exception. SVM
+performs remarkably well (accuracy = 0.71) compared with the competition.
+
+Additionally, it is apparent that machine learning algorithms in general do
+not scale well to big data. Only K-Means, SVM, and Random Forests were
+truly scalable to a big(ish) data set. And of these, again, only SVM
+resulted in even mildly usable performance. Clearly more research needs to
+be conducted in the field of scalable, parallelizable machine learning
+algorithms. The Apache Mahout\footnote{\url{http://mahout.apache.org}}
+project aims to provide just this, but being built on top of
+Hadoop\footnote{\url{http://hadoop.apache.org}} severely limits
+accessibility and portability. Not many algorithms fit the MapReduce
+paradigm, and not all applications interface well with the underlying Java
+infrastructure.
+
+The current pace and direction of technological development is, by all
+accounts, directed toward massively scalable cloud computing over large
+datasets. It is only a matter of time before promising open source software
+like the \texttt{scikit-learn} project will be brought up to these
+standards.
 
 % }}}
 
