@@ -1,4 +1,4 @@
-\documentclass[letterpaper,10pt]{article}
+\documentclass[letterpaper,12pt]{article}
 
 \usepackage[fleqn]{amsmath}
 \usepackage{amstext}
@@ -64,6 +64,7 @@
 \maketitle
 
 
+% 1. Problem Description {{{
   \section{Problem Description}
 
   Textual data is everywhere on the Internet today. This written language
@@ -82,10 +83,9 @@
   the dataset is required. Thus they serve as excellent tools to perform
   preliminary investigation on an unknown dataset. However, given knowledge
   about the dataset (\textit{e.g.} a ground-truth set of labels over the
-  data) other algorithms can become relevant. There are a variety of
-  powerful classification algorithms which can be applied to large textual
-  data sets when the labels of a subset of training data are known
-  beforehand.
+  data) other algorithms become relevant. There are a variety of powerful
+  classification algorithms which can be applied to large textual data sets
+  when the labels of a subset of training data are known beforehand.
 
   The goal of this project is to apply a variety of data mining techniques,
   specifically clustering and classifying algorithms, to a large dataset of
@@ -96,32 +96,45 @@
   prototypical Internet sourced textual dataset. A secondary goal of this
   investigation is to showcase some of the features of the Python machine
   learning library
-  \texttt{scikit-learn}.\footnote{\url{http://scikit-learn.org}}
+  \texttt{scikit-learn}.\footnote{\url{http://scikit-learn.org}} After the
+  experiments are completed, evaluation metrics will provide insight into
+  the algorithmic performance.
+% }}}
 
 
+% 2. Related Work {{{
   \section{Related Work}
 
   How does this problem and the method relate to problems/methods others
   have developed in the past.
+% }}}
 
 
+% 3. Solution {{{
   \section{Solution}
 
   How did you solve the problem? Describe the technical approach. Tell us
   what method/algorithm did you use, develop or extend and how did you
   implement it.
+% }}}
 
 
+% 4. Experiments {{{
   \section{Experiments}
 
+% 4.1. Data {{{
   \subsection{Data} Briefly describe the data and its size (number of
   records and number of features, type of features etc.)
+% }}}
 
+% 4.2. Experimental Setup {{{
   \subsection{Experimental Setup} Describe how did you setup your
   experiments, how the training/testing data was prepared, what performance
   metrics are you considering, what baseline methods for comparison are you
   using.
+% }}}
 
+% 4.3. Experimental Results {{{
   \subsection{Experimental Results} Describe your experimental results.
   Structure your experiments around particular aspects of your method. For
   example, you could structure the experiment as follows: (1) a table
@@ -130,11 +143,18 @@
   graph plotting the size of the training dataset vs. the time it takes to
   train the model; (4) Investigation of the learned model (what are the
   important features, etc.). \cite{santos2009}
+% }}}
+
+% }}}
 
 
+% 5. Conclusions {{{
   \section{Conclusion}
 
+% }}}
 
+
+% 6. Contributions {{{
   \section{Contributions}
 
   \subsection{Joshua's Contributions}
@@ -142,6 +162,7 @@
 
   \subsection{Michel's Contributions}
   \input{michel_contributions}
+% }}}
 
   \clearpage
   \bibliographystyle{plain}
